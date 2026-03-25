@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>3 ZAK0ИA 0 VEhИOSTI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #000000;
+            font-family: 'Courier New', 'Lucida Console', 'VT323', monospace;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            color: #4a4a4a;
+            padding: 2rem 1rem;
+            overflow-x: hidden;
+        }
+
+        /* зернистость */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(20, 20, 20, 0.4) 0px,
+                rgba(20, 20, 20, 0.4) 2px,
+                transparent 2px,
+                transparent 6px
+            );
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        /* кровавый отсвет */
+        body::after {
+            content: "";
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 140px;
+            background: linear-gradient(to top, rgba(40, 0, 0, 0.28) 0%, transparent 100%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* дисклеймер оверлей */
+        .disclaimer-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000000;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            transition: opacity 1.2s ease;
+            opacity: 1;
+            pointer-events: none;
+        }
+
+        .disclaimer-text {
+            font-family: 'Courier New', monospace;
+            font-size: 1.6rem;
+            letter-spacing: 4px;
+            color: #6a2a2a;
+            text-align: center;
+            text-transform: uppercase;
+            background: #000000;
+            padding: 1.5rem;
+            animation: glitchFlicker 0.2s infinite;
+            text-shadow: 0 0 5px #3a0a0a;
+        }
+
+        .headphones-hint {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.65rem;
+            color: #4a2a2a;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 4px 8px;
+            letter-spacing: 1px;
+            z-index: 1001;
+            border-left: 2px solid #6a2a2a;
+            opacity: 0.7;
+            animation: hintGlitch 0.25s infinite;
+            white-space: nowrap;
+        }
+
+        @keyframes hintGlitch {
+            0% { opacity: 0.6; transform: translateX(0px); }
+            25% { opacity: 0.9; transform: translateX(1px); text-shadow: -1px 0 #8a2a2a; }
+            75% { opacity: 0.5; transform: translateX(-1px); text-shadow: 1px 0 #3a0a0a; }
+            100% { opacity: 0.7; transform: translateX(0px); }
+        }
+
+        @keyframes glitchFlicker {
+            0% { opacity: 1; text-shadow: -1px 0 #8a2a2a; transform: skew(0deg);}
+            25% { opacity: 0.92; text-shadow: 1px 0 #4a0a0a; transform: skew(0.5deg);}
+            50% { opacity: 1; text-shadow: -1px 0 #6a2a2a; transform: skew(-0.3deg);}
+            75% { opacity: 0.96; text-shadow: 2px 0 #2a0a0a; transform: skew(0.2deg);}
+            100% { opacity: 1; text-shadow: 0 0 #6a2a2a; transform: skew(0deg);}
+        }
+
+        .main-content {
+            opacity: 0;
+            transition: opacity 2s ease;
+            width: 100%;
+            max-width: 700px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* обложка с кровавыми надписями */
+        .cover {
+            margin-bottom: 2rem;
+            position: relative;
+            opacity: 0;
+            animation: coverReveal 1.1s ease-out 0.3s forwards;
+        }
+
+        @keyframes coverReveal {
+            0% { opacity: 0; transform: scale(0.92); filter: grayscale(1); }
+            100% { opacity: 1; transform: scale(1); filter: grayscale(0.2); }
+        }
+
+        .cover-img-wrapper {
+            position: relative;
+            display: inline-block;
+            width: 200px;
+            height: 200px;
+        }
+
+        .cover img {
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+            border: 1px solid #2a2a2a;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+            transition: all 0.4s ease;
+            filter: grayscale(0.3) contrast(1.05);
+            display: block;
+        }
+
+        .cover img:hover {
+            filter: grayscale(0) contrast(1.1);
+            border-color: #5a2a2a;
+            transform: scale(1.01);
+        }
+
+        .blood-overlay-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Courier New', monospace;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #aa2a2a;
+            text-transform: uppercase;
+            text-align: center;
+            letter-spacing: 3px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 6px 12px;
+            border-left: 2px solid #aa2a2a;
+            border-right: 2px solid #aa2a2a;
+            white-space: nowrap;
+            z-index: 15;
+            pointer-events: none;
+            text-shadow: 0 0 5px #ff0000, 0 0 2px #3a0000;
+            backdrop-filter: blur(2px);
+            animation: bloodTextGlitch 0.12s infinite;
+            opacity: 0;
+            transition: opacity 0.1s ease;
+        }
+
+        @keyframes bloodTextGlitch {
+            0% { text-shadow: -1px 0 #ff0000, 1px 0 #3a0000; transform: translate(-50%, -50%) skew(0deg);}
+            25% { text-shadow: -2px 0 #aa0000, 2px 0 #1a0000; transform: translate(-50%, -50%) skew(1deg);}
+            75% { text-shadow: 1px 0 #ff4444, -1px 0 #2a0000; transform: translate(-50%, -50%) skew(-0.8deg);}
+            100% { text-shadow: 0 0 3px #ff0000; transform: translate(-50%, -50%) skew(0deg);}
+        }
+
+        .album-title {
+            font-size: 1.2rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: #6a6a6a;
+            margin-bottom: 2rem;
+            font-weight: normal;
+            animation: titleGlow 3s infinite alternate;
+        }
+
+        @keyframes titleGlow {
+            0% { text-shadow: 0 0 0px #3a3a3a; color: #6a6a6a; }
+            100% { text-shadow: 0 0 2px #7a2a2a; color: #8a5a5a; }
+        }
+
+        .tracklist {
+            margin: 2rem 0 2rem;
+            text-align: left;
+            display: inline-block;
+            width: 100%;
+            max-width: 520px;
+            border-top: 1px solid #252525;
+            border-bottom: 1px solid #252525;
+            padding: 1.2rem 0;
+        }
+
+        .track {
+            display: flex;
+            align-items: baseline;
+            gap: 0.8rem;
+            padding: 0.45rem 0.2rem;
+            font-size: 0.8rem;
+            font-family: 'Courier New', monospace;
+            transition: all 0.25s ease;
+            border-left: 2px solid transparent;
+            position: relative;
+        }
+
+        .track:hover {
+            border-left-color: #6a2a2a;
+            padding-left: 8px;
+            background: rgba(30, 30, 30, 0.3);
+        }
+
+        .track-num {
+            color: #5a3a3a;
+            min-width: 32px;
+            font-size: 0.75rem;
+        }
+
+        .track-name {
+            flex: 1;
+            color: #8a8a8a;
+            text-transform: uppercase;
+            transition: color 0.2s;
+        }
+
+        .track:hover .track-name {
+            color: #bc8f8f;
+        }
+
+        .track-prod {
+            color: #4a4a4a;
+            font-size: 0.65rem;
+        }
+
+        /* белые звёздочки вместо жёлтых */
+        .white-star {
+            color: #cccccc;
+            filter: grayscale(1);
+            display: inline-block;
+        }
+
+        .track.glitching-track {
+            animation: trackShake 0.08s infinite;
+            background: rgba(60, 10, 10, 0.3);
+        }
+
+        @keyframes trackShake {
+            0% { transform: translateX(0px); }
+            25% { transform: translateX(2px); }
+            75% { transform: translateX(-2px); }
+            100% { transform: translateX(0px); }
+        }
+
+        .glitched-track-name {
+            color: #bc4a4a !important;
+            text-shadow: 0 0 3px #6a0000;
+            letter-spacing: 1px;
+        }
+
+        .links {
+            margin-top: 2rem;
+            display: flex;
+            gap: 1.8rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #6a6a6a;
+            background: transparent;
+            border: 1px solid #3a3a3a;
+            padding: 0.6rem 1.4rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            color: #bc8f8f;
+            border-color: #7a2a2a;
+            background: rgba(30, 10, 10, 0.4);
+            letter-spacing: 3px;
+            transform: translateY(-2px);
+        }
+
+        .footer {
+            margin-top: 2.5rem;
+            font-size: 0.65rem;
+            color: #3a3a3a;
+            letter-spacing: 1.5px;
+            border-top: 1px solid #202020;
+            padding-top: 1.5rem;
+        }
+
+        .floating-glitch {
+            position: fixed;
+            z-index: 20;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            color: #6a2a2a;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 4px 12px;
+            border-left: 2px solid #8a2a2a;
+            letter-spacing: 1px;
+            white-space: nowrap;
+            pointer-events: none;
+            backdrop-filter: blur(2px);
+            opacity: 0;
+            animation: floatGlitch 3.5s ease forwards;
+        }
+
+        @keyframes floatGlitch {
+            0% { opacity: 0; transform: translateX(-10px); filter: blur(2px); }
+            15% { opacity: 0.9; transform: translateX(0); filter: blur(0); }
+            85% { opacity: 0.8; transform: translateX(0); }
+            100% { opacity: 0; transform: translateX(8px) translateY(-12px); filter: blur(3px); }
+        }
+
+        @keyframes textGlitchAnim {
+            0% { text-shadow: -1px 0 #6a2a2a; transform: skew(0deg);}
+            20% { text-shadow: -2px 0 #8a2a2a; transform: skew(0.8deg);}
+            40% { text-shadow: 1px 0 #6a2a2a; transform: skew(-0.5deg);}
+            100% { text-shadow: 0 0 #5a2a2a; transform: skew(0);}
+        }
+        
+        .glitch-active { animation: textGlitchAnim 0.12s infinite !important; }
+
+        @media (max-width: 560px) {
+            .cover-img-wrapper, .cover img { width: 150px; height: 150px; }
+            .blood-overlay-text { font-size: 0.8rem; white-space: nowrap; padding: 4px 8px; }
+            .album-title { font-size: 0.9rem; letter-spacing: 2px; }
+            .track { font-size: 0.7rem; gap: 0.5rem; }
+            .btn { font-size: 0.7rem; padding: 0.5rem 1rem; }
+            .headphones-hint { font-size: 0.5rem; top: 8px; left: 8px; }
+            .disclaimer-text { font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="disclaimer-overlay" id="disclaimerOverlay">
+        <div class="headphones-hint" id="headphonesHint">better in headphones</div>
+        <div class="disclaimer-text" id="disclaimerText">будь готов</div>
+    </div>
+
+    <div class="main-content" id="mainContent">
+        <div class="container">
+            <div class="cover">
+                <div class="cover-img-wrapper" id="coverWrapper">
+                    <img src="3zakonacover.png" alt="3 ZAK0ИA 0 VEhИOSTI" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 200 200\'%3E%3Crect width=\'200\' height=\'200\' fill=\'%23110000\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' text-anchor=\'middle\' fill=\'%236a2a2a\' font-size=\'12\' font-family=\'monospace\' dy=\'.3em\'%3Evoid%3C/text%3E%3C/svg%3E';">
+                    <div class="blood-overlay-text" id="bloodOverlay"></div>
+                </div>
+            </div>
+            <div class="album-title" id="albumTitle">3 ZAK0ИA 0 VEhИOSTI</div>
+            <div class="tracklist" id="tracklist">
+                <div class="track" data-original="верни мне ЧNСТИЛNЩЕ"><span class="track-num">01</span><span class="track-name">верни мне ЧNСТИЛNЩЕ</span><span class="track-prod">prod. me</span></div>
+                <div class="track" data-original="НАМАСТЕ"><span class="track-num">02</span><span class="track-name">НАМАСТЕ</span><span class="track-prod">prod. diklor</span></div>
+                <div class="track" data-original="ВНИКУДА"><span class="track-num">03</span><span class="track-name">ВНИКУДА</span><span class="track-prod">prod. diklor</span></div>
+                <div class="track" data-original="ДОРБЛЮ ⭐⭐⭐"><span class="track-num">04</span><span class="track-name" id="track04name">ДОРБЛЮ ⭐⭐⭐</span><span class="track-prod">prod. greyrock, pitch on</span></div>
+                <div class="track" data-original="ДОРБЛЮ ⭐⭐⭐"><span class="track-num">05</span><span class="track-name" id="track05name">ДОРБЛЮ ⭐⭐⭐</span><span class="track-prod">prod. greyrock, pitch off</span></div>
+                <div class="track" data-original="перерыв на рекламу, не переключайтесь"><span class="track-num">06</span><span class="track-name">перерыв на рекламу, не переключайтесь</span><span class="track-prod">prod. yana konram</span></div>
+                <div class="track" data-original="третьяковская галерея (feat. hellwyy)"><span class="track-num">07</span><span class="track-name">третьяковская галерея (feat. hellwyy)</span><span class="track-prod">prod. Toby Fox</span></div>
+                <div class="track" data-original="ТЫ СЧАСТЛNВ - ОНN НЕТ"><span class="track-num">08</span><span class="track-name">ТЫ СЧАСТЛNВ - ОНN НЕТ</span><span class="track-prod">prod. me</span></div>
+                <div class="track" data-original="Я СЧ4СТЛNВ - ТЫ Н3Т"><span class="track-num">09</span><span class="track-name">Я СЧ4СТЛNВ - ТЫ Н3Т</span><span class="track-prod">prod. me</span></div>
+                <div class="track" data-original="ren &quot;demo&quot; &quot;release&quot;"><span class="track-num">10</span><span class="track-name">ren "demo" "release"</span><span class="track-prod">prod. me</span></div>
+                <div class="track" data-original="ТЕPP4КТЫ!!"><span class="track-num">11</span><span class="track-name">ТЕPP4КТЫ!!</span><span class="track-prod">prod. greyrock</span></div>
+            </div>
+            <div class="links">
+                <a href="https://soundcloud.com/temaprikolov93" class="btn" target="_blank">SOUNDCLOUD</a>
+                <a href="https://t.me/temaprikolov2" class="btn" target="_blank">TELEGRAM</a>
+            </div>
+            <div class="footer">3 ZAK0ИA 0 VEhИOSTI</div>
+        </div>
+    </div>
+
+    <audio id="bgAudio" loop preload="auto" style="display: none;">
+        <source src="prewiev3zakona.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        (function() {
+            // заменяем жёлтые звёздочки на белые
+            const track04name = document.getElementById('track04name');
+            const track05name = document.getElementById('track05name');
+            if (track04name) track04name.innerHTML = track04name.innerHTML.replace(/⭐/g, '<span class="white-star">★</span>');
+            if (track05name) track05name.innerHTML = track05name.innerHTML.replace(/⭐/g, '<span class="white-star">★</span>');
+            
+            // список для кровавых надписей на обложке
+            const bloodMessages = ["Я ДРУГ", "Я ВРАГ", "ОБЕРНИСЬ", "Я ВЗАДИ"];
+            const bloodOverlay = document.getElementById('bloodOverlay');
+            let currentBloodTimeout = null;
+            
+            function showRandomBloodMessage() {
+                if (!bloodOverlay) return;
+                const randomMsg = bloodMessages[Math.floor(Math.random() * bloodMessages.length)];
+                bloodOverlay.textContent = randomMsg;
+                bloodOverlay.style.opacity = '1';
+                
+                // глитч-эффект во время показа
+                let glitchCount = 0;
+                const glitchInterval = setInterval(() => {
+                    if (bloodOverlay.style.opacity === '0' || bloodOverlay.style.opacity === 0) {
+                        clearInterval(glitchInterval);
+                        return;
+                    }
+                    if (Math.random() > 0.6) {
+                        const glitched = randomMsg.split('').map(c => Math.random() > 0.85 ? String.fromCharCode(c.charCodeAt(0) + (Math.random() > 0.5 ? 1 : -1)) : c).join('');
+                        bloodOverlay.textContent = glitched;
+                        setTimeout(() => {
+                            if (bloodOverlay.style.opacity !== '0') bloodOverlay.textContent = randomMsg;
+                        }, 80);
+                    }
+                }, 200);
+                
+                // длительность от 1 до 4 секунд
+                const duration = (Math.random() * 3000) + 1000;
+                currentBloodTimeout = setTimeout(() => {
+                    bloodOverlay.style.opacity = '0';
+                    clearInterval(glitchInterval);
+                }, duration);
+            }
+            
+            function startBloodOverlayMessages() {
+                setInterval(() => {
+                    if (Math.random() > 0.65) {
+                        showRandomBloodMessage();
+                    }
+                }, 8000);
+                setTimeout(() => showRandomBloodMessage(), 3000);
+            }
+            
+            // ------------------- ДИСКЛЕЙМЕР -------------------
+            const disclaimerOverlay = document.getElementById('disclaimerOverlay');
+            const disclaimerText = document.getElementById('disclaimerText');
+            const mainContent = document.getElementById('mainContent');
+            const headphonesHint = document.getElementById('headphonesHint');
+            
+            setInterval(() => {
+                if (disclaimerOverlay.style.display !== 'none') {
+                    if (Math.random() > 0.7) {
+                        const originalHint = "better in headphones";
+                        const glitched = originalHint.split('').map(c => {
+                            if (Math.random() > 0.85) {
+                                return String.fromCharCode(c.charCodeAt(0) + (Math.random() > 0.5 ? 1 : -1));
+                            }
+                            return c;
+                        }).join('');
+                        headphonesHint.textContent = glitched;
+                        setTimeout(() => {
+                            if (disclaimerOverlay.style.display !== 'none') {
+                                headphonesHint.textContent = "better in headphones";
+                            }
+                        }, 180);
+                    }
+                }
+            }, 400);
+            
+            const messages = ["будь готов", "попробуй не оглохнуть =)", "тренируй уши."];
+            let step = 0;
+            
+            function runDisclaimer() {
+                if (step >= messages.length) {
+                    disclaimerOverlay.style.opacity = '0';
+                    setTimeout(() => {
+                        disclaimerOverlay.style.display = 'none';
+                        mainContent.style.opacity = '1';
+                        startAudioAfterDisclaimer();
+                        startFloatingMessages();
+                        startGlitchEffects();
+                        startTrackReplacement();
+                        startBloodOverlayMessages();
+                    }, 1200);
+                    return;
+                }
+                
+                disclaimerText.textContent = messages[step];
+                disclaimerText.style.animation = 'none';
+                setTimeout(() => {
+                    disclaimerText.style.animation = 'glitchFlicker 0.2s infinite';
+                }, 10);
+                
+                if (Math.random() > 0.3) {
+                    const original = messages[step];
+                    setTimeout(() => {
+                        if (step < messages.length) {
+                            const glitched = original.split('').map(c => Math.random() > 0.85 ? String.fromCharCode(c.charCodeAt(0) + (Math.random() > 0.5 ? 1 : -1)) : c).join('');
+                            disclaimerText.textContent = glitched;
+                            setTimeout(() => {
+                                if (step < messages.length) disclaimerText.textContent = original;
+                            }, 120);
+                        }
+                    }, 80);
+                }
+                
+                setTimeout(() => {
+                    step++;
+                    runDisclaimer();
+                }, 3000);
+            }
+            
+            runDisclaimer();
+            
+            // ------------------- АУДИО -------------------
+            const audio = document.getElementById('bgAudio');
+            audio.volume = 0.5;
+            let audioStarted = false;
+            
+            function startAudioAfterDisclaimer() {
+                if (audioStarted) return;
+                audio.play().then(() => { audioStarted = true; }).catch(() => {});
+            }
+            
+            document.addEventListener('click', function startAudioOnClick() {
+                if (!audioStarted) {
+                    audio.play().catch(e => {});
+                    audioStarted = true;
+                }
+                document.removeEventListener('click', startAudioOnClick);
+            });
+            
+            // ------------------- БЛУЖДАЮЩИЕ СООБЩЕНИЯ -------------------
+            const sideMessages = ["^-^", "=)", "temaprikolov???/", "drop in april", "april", "prikolov", "soundcloud", "telegram"];
+            
+            function spawnGlitchMessage() {
+                const msg = sideMessages[Math.floor(Math.random() * sideMessages.length)];
+                const isLeft = Math.random() > 0.5;
+                const posY = 50 + Math.random() * (window.innerHeight - 150);
+                
+                const div = document.createElement('div');
+                div.className = 'floating-glitch';
+                div.textContent = msg;
+                div.style.left = isLeft ? '10px' : 'auto';
+                div.style.right = isLeft ? 'auto' : '10px';
+                div.style.top = posY + 'px';
+                
+                if (Math.random() > 0.6) {
+                    const glitchedMsg = msg.split('').map(c => Math.random() > 0.85 ? String.fromCharCode(c.charCodeAt(0) + (Math.random() > 0.5 ? 2 : -2)) : c).join('');
+                    div.textContent = glitchedMsg;
+                }
+                
+                document.body.appendChild(div);
+                setTimeout(() => { if (div && div.remove) div.remove(); }, 3800);
+            }
+            
+            function startFloatingMessages() {
+                setInterval(() => {
+                    const count = Math.floor(Math.random() * 3) + 1;
+                    for (let i = 0; i < count; i++) {
+                        setTimeout(() => spawnGlitchMessage(), i * 200);
+                    }
+                }, 7000);
+                setTimeout(() => { spawnGlitchMessage(); setTimeout(() => spawnGlitchMessage(), 400); }, 2000);
+            }
+            
+            // ------------------- ПОДМЕНА ТРЕКОВ -------------------
+            const tracks = document.querySelectorAll('.track');
+            const trackNameSpans = document.querySelectorAll('.track-name');
+            const originalNames = [];
+            trackNameSpans.forEach((span, idx) => { originalNames.push(span.textContent); });
+            
+            const glitchMessages = [
+                "Зачем ты тут?", "Почему ты тут находишься?", "Я друг", "Я враг",
+                "Я забрал чистилище.", "Расскажи мне все 3 закона", "Знаешь 3 закона о вечности?",
+                "Переходи на мой саундклауд", "Переходи в мой телеграм канал"
+            ];
+            
+            let currentReplacedTrack = null;
+            let replaceTimeout = null;
+            
+            function replaceRandomTrack() {
+                if (!trackNameSpans.length) return;
+                if (currentReplacedTrack !== null) return;
+                
+                const randomIndex = Math.floor(Math.random() * trackNameSpans.length);
+                const trackElement = tracks[randomIndex];
+                const nameSpan = trackNameSpans[randomIndex];
+                const randomMsg = glitchMessages[Math.floor(Math.random() * glitchMessages.length)];
+                const originalText = nameSpan.textContent;
+                
+                nameSpan.textContent = randomMsg;
+                nameSpan.classList.add('glitched-track-name');
+                trackElement.classList.add('glitching-track');
+                currentReplacedTrack = { index: randomIndex, original: originalText, span: nameSpan, track: trackElement };
+                
+                const duration = (Math.random() * 9000) + 1000;
+                
+                replaceTimeout = setTimeout(() => {
+                    if (currentReplacedTrack) {
+                        currentReplacedTrack.span.textContent = currentReplacedTrack.original;
+                        currentReplacedTrack.span.classList.remove('glitched-track-name');
+                        currentReplacedTrack.track.classList.remove('glitching-track');
+                        currentReplacedTrack = null;
+                    }
+                    replaceTimeout = null;
+                }, duration);
+                
+                let glitchInterval = setInterval(() => {
+                    if (!currentReplacedTrack || currentReplacedTrack.index !== randomIndex) {
+                        clearInterval(glitchInterval);
+                        return;
+                    }
+                    if (Math.random() > 0.6) {
+                        const tempGlitch = randomMsg.split('').map(c => Math.random() > 0.9 ? String.fromCharCode(c.charCodeAt(0) + (Math.random() > 0.5 ? 1 : -1)) : c).join('');
+                        nameSpan.textContent = tempGlitch;
+                        setTimeout(() => {
+                            if (currentReplacedTrack && currentReplacedTrack.index === randomIndex) {
+                                nameSpan.textContent = randomMsg;
+                            }
+                        }, 80);
+                    }
+                }, 400);
+                
+                setTimeout(() => clearInterval(glitchInterval), duration);
+            }
+            
+            function startTrackReplacement() {
+                setInterval(() => {
+                    if (currentReplacedTrack === null && Math.random() > 0.65) {
+                        replaceRandomTrack();
+                    }
+                }, 11000);
+            }
+            
+            // ------------------- ГЛИТЧ-ЭФФЕКТЫ -------------------
+            const titleElement = document.getElementById('albumTitle');
+            const originalTitle = "3 ZAK0ИA 0 VEhИOSTI";
+            const glitchVariants = ["3 ZAK0ИA 0 VEhИOSTI", "3 ZAK0ИA 0 VENHИOSTI", "3 ZAK0NА 0 VEhИOSTI", "3 ZAK0ИA 0 VENHИ0STI", "3 ZAK0NА 0 VENHИ0STI"];
+            
+            function applyRandomTitleGlitch() {
+                if (!titleElement) return;
+                const randomIdx = Math.floor(Math.random() * glitchVariants.length);
+                titleElement.textContent = glitchVariants[randomIdx];
+                titleElement.classList.add('glitch-active');
+                setTimeout(() => {
+                    if (titleElement) {
+                        titleElement.textContent = originalTitle;
+                        titleElement.classList.remove('glitch-active');
+                    }
+                }, 150);
+            }
+            
+            function startTitleGlitch() {
+                setInterval(() => { if (Math.random() > 0.68) applyRandomTitleGlitch(); }, 4200);
+                setInterval(() => {
+                    if (Math.random() > 0.85 && titleElement) {
+                        titleElement.textContent = "3 ZAK0ИA 0 VENHИ0STI";
+                        titleElement.classList.add('glitch-active');
+                        setTimeout(() => {
+                            if (titleElement) {
+                                titleElement.textContent = originalTitle;
+                                titleElement.classList.remove('glitch-active');
+                            }
+                        }, 280);
+                    }
+                }, 9700);
+            }
+            
+            function startGlitchEffects() {
+                startTitleGlitch();
+                const tracklistDiv = document.querySelector('.tracklist');
+                setInterval(() => {
+                    if (Math.random() > 0.88 && tracklistDiv) {
+                        tracklistDiv.style.transform = `translateX(${Math.random() * 3 - 1.5}px)`;
+                        setTimeout(() => { if (tracklistDiv) tracklistDiv.style.transform = ''; }, 70);
+                    }
+                }, 3800);
+            }
+            
+            // анимация появления треков
+            if (tracks.length) {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.style.transition = 'opacity 0.45s ease, transform 0.35s';
+                            entry.target.style.opacity = '1';
+                            entry.target.style.transform = 'translateX(0)';
+                        }
+                    });
+                }, { threshold: 0.1 });
+                tracks.forEach((track, idx) => {
+                    track.style.opacity = '0';
+                    track.style.transform = 'translateX(-7px)';
+                    track.style.transition = `opacity 0.3s ease ${idx * 0.04}s, transform 0.25s ease ${idx * 0.04}s`;
+                    observer.observe(track);
+                });
+            }
+            
+            const buttons = document.querySelectorAll('.btn');
+            buttons.forEach(btn => {
+                btn.addEventListener('mouseenter', () => btn.style.letterSpacing = '3px');
+                btn.addEventListener('mouseleave', () => btn.style.letterSpacing = '2px');
+            });
+            
+            const coverImg = document.querySelector('.cover img');
+            if (coverImg) {
+                coverImg.onerror = () => {
+                    coverImg.style.filter = 'blur(3px) grayscale(0.7)';
+                    coverImg.style.opacity = '0.7';
+                };
+            }
+        })();
+    </script>
+</body>
+</html>
