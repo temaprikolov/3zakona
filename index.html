@@ -151,7 +151,7 @@
             object-fit: cover;
             border: 1px solid #2a2a2a;
             box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
-            transition: all 0.4s ease;
+            transition: all 0.2s ease;
             filter: grayscale(0.3) contrast(1.05);
             display: block;
         }
@@ -160,6 +160,19 @@
             filter: grayscale(0) contrast(1.1);
             border-color: #5a2a2a;
             transform: scale(1.01);
+        }
+
+        /* анимация тряски для глитч-обложки */
+        .cover-img-wrapper.glitching-cover {
+            animation: coverShake 0.05s infinite;
+        }
+
+        @keyframes coverShake {
+            0% { transform: translate(0px, 0px) rotate(0deg); }
+            25% { transform: translate(2px, -1px) rotate(0.5deg); }
+            50% { transform: translate(-2px, 1px) rotate(-0.5deg); }
+            75% { transform: translate(1px, -2px) rotate(0.3deg); }
+            100% { transform: translate(0px, 0px) rotate(0deg); }
         }
 
         .blood-overlay-text {
@@ -379,7 +392,7 @@
         <div class="container">
             <div class="cover">
                 <div class="cover-img-wrapper" id="coverWrapper">
-                    <img src="3zakonacover.png" alt="3 ZAK0ИA 0 VEhИOSTI" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 200 200\'%3E%3Crect width=\'200\' height=\'200\' fill=\'%23110000\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' text-anchor=\'middle\' fill=\'%236a2a2a\' font-size=\'12\' font-family=\'monospace\' dy=\'.3em\'%3Evoid%3C/text%3E%3C/svg%3E';">
+                    <img src="3zakonacover.png" alt="3 ZAK0ИA 0 VEhИOSTI" id="coverImage">
                     <div class="blood-overlay-text" id="bloodOverlay"></div>
                 </div>
             </div>
@@ -412,7 +425,88 @@
 
     <script>
         (function() {
-            // заменяем звёздочки на белые (уже ★ в коде, но оставим для совместимости)
+            // ---- ГЛИТЧ-ОБЛОЖКИ ----
+            const coverImage = document.getElementById('coverImage');
+            const coverWrapper = document.getElementById('coverWrapper');
+            const originalCover = "3zakonacover.png";
+            const glitchCovers = [
+                "glitchcover1.png",
+                "glitchcover2.png",
+                "glitchcover3.png",
+                "glitchcover4.png",
+                "glitchcover5.png",
+                "glitchcover6.png"
+            ];
+            
+            let isGlitchCoverActive = false;
+            let currentGlitchTimeout = null;
+            let coverGlitchInterval = null;
+            
+            function showRandomGlitchCover() {
+                if (isGlitchCoverActive) return;
+                
+                const randomIndex = Math.floor(Math.random() * glitchCovers.length);
+                const glitchCover = glitchCovers[randomIndex];
+                
+                // сохраняем оригинал если нужно
+                const currentSrc = coverImage.src;
+                const isAlreadyGlitch = currentSrc.includes('glitchcover');
+                
+                if (!isAlreadyGlitch) {
+                    coverImage.src = glitchCover;
+                    isGlitchCoverActive = true;
+                    coverWrapper.classList.add('glitching-cover');
+                    
+                    // дополнительная глитч-тряска с подменой картинки на секунду
+                    let shakeInterval = setInterval(() => {
+                        if (!isGlitchCoverActive) {
+                            clearInterval(shakeInterval);
+                            return;
+                        }
+                        if (Math.random() > 0.7) {
+                            const tempGlitch = glitchCovers[Math.floor(Math.random() * glitchCovers.length)];
+                            coverImage.src = tempGlitch;
+                            setTimeout(() => {
+                                if (isGlitchCoverActive) coverImage.src = glitchCover;
+                            }, 80);
+                        }
+                    }, 400);
+                    
+                    const duration = (Math.random() * 3000) + 1000; // 1-4 секунды
+                    currentGlitchTimeout = setTimeout(() => {
+                        coverImage.src = originalCover;
+                        coverWrapper.classList.remove('glitching-cover');
+                        isGlitchCoverActive = false;
+                        clearInterval(shakeInterval);
+                        currentGlitchTimeout = null;
+                    }, duration);
+                }
+            }
+            
+            function startGlitchCoverRotation() {
+                setInterval(() => {
+                    if (!isGlitchCoverActive && Math.random() > 0.7) {
+                        showRandomGlitchCover();
+                    }
+                }, 11000); // примерно каждые 11 секунд может появиться глитч-обложка
+                setTimeout(() => showRandomGlitchCover(), 5000);
+            }
+            
+            // обработка ошибок загрузки глитч-обложек
+            coverImage.onerror = function() {
+                if (coverImage.src.includes('glitchcover')) {
+                    // если глитч-обложка не загрузилась, возвращаем оригинал
+                    coverImage.src = originalCover;
+                    coverWrapper.classList.remove('glitching-cover');
+                    isGlitchCoverActive = false;
+                    if (currentGlitchTimeout) clearTimeout(currentGlitchTimeout);
+                } else {
+                    coverImage.style.filter = 'blur(3px) grayscale(0.7)';
+                    coverImage.style.opacity = '0.7';
+                }
+            };
+            
+            // заменяем звёздочки на белые
             const track04name = document.getElementById('track04name');
             const track05name = document.getElementById('track05name');
             if (track04name && track04name.innerHTML.includes('⭐')) track04name.innerHTML = track04name.innerHTML.replace(/⭐/g, '<span class="white-star">★</span>');
@@ -496,6 +590,7 @@
                         startGlitchEffects();
                         startTrackReplacement();
                         startBloodOverlayMessages();
+                        startGlitchCoverRotation();
                     }, 1200);
                     return;
                 }
@@ -582,8 +677,6 @@
             // ------------------- ПОДМЕНА ТРЕКОВ -------------------
             const tracks = document.querySelectorAll('.track');
             const trackNameSpans = document.querySelectorAll('.track-name');
-            const originalNames = [];
-            trackNameSpans.forEach((span, idx) => { originalNames.push(span.textContent); });
             
             const glitchMessages = [
                 "Зачем ты тут?", "Почему ты тут находишься?", "Я друг", "Я враг",
@@ -717,14 +810,6 @@
                 btn.addEventListener('mouseenter', () => btn.style.letterSpacing = '3px');
                 btn.addEventListener('mouseleave', () => btn.style.letterSpacing = '2px');
             });
-            
-            const coverImg = document.querySelector('.cover img');
-            if (coverImg) {
-                coverImg.onerror = () => {
-                    coverImg.style.filter = 'blur(3px) grayscale(0.7)';
-                    coverImg.style.opacity = '0.7';
-                };
-            }
         })();
     </script>
 </body>
