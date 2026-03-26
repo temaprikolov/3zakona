@@ -151,7 +151,7 @@
             object-fit: cover;
             border: 1px solid #2a2a2a;
             box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
-            transition: all 0.2s ease;
+            transition: all 0.1s ease;
             filter: grayscale(0.3) contrast(1.05);
             display: block;
         }
@@ -169,9 +169,9 @@
 
         @keyframes coverShake {
             0% { transform: translate(0px, 0px) rotate(0deg); }
-            25% { transform: translate(2px, -1px) rotate(0.5deg); }
-            50% { transform: translate(-2px, 1px) rotate(-0.5deg); }
-            75% { transform: translate(1px, -2px) rotate(0.3deg); }
+            25% { transform: translate(3px, -2px) rotate(0.8deg); }
+            50% { transform: translate(-3px, 2px) rotate(-0.8deg); }
+            75% { transform: translate(2px, -1px) rotate(0.5deg); }
             100% { transform: translate(0px, 0px) rotate(0deg); }
         }
 
@@ -440,7 +440,7 @@
             
             let isGlitchCoverActive = false;
             let currentGlitchTimeout = null;
-            let coverGlitchInterval = null;
+            let currentGlitchInterval = null;
             
             function showRandomGlitchCover() {
                 if (isGlitchCoverActive) return;
@@ -448,61 +448,61 @@
                 const randomIndex = Math.floor(Math.random() * glitchCovers.length);
                 const glitchCover = glitchCovers[randomIndex];
                 
-                // сохраняем оригинал если нужно
-                const currentSrc = coverImage.src;
-                const isAlreadyGlitch = currentSrc.includes('glitchcover');
+                coverImage.src = glitchCover;
+                isGlitchCoverActive = true;
+                coverWrapper.classList.add('glitching-cover');
                 
-                if (!isAlreadyGlitch) {
-                    coverImage.src = glitchCover;
-                    isGlitchCoverActive = true;
-                    coverWrapper.classList.add('glitching-cover');
-                    
-                    // дополнительная глитч-тряска с подменой картинки на секунду
-                    let shakeInterval = setInterval(() => {
-                        if (!isGlitchCoverActive) {
-                            clearInterval(shakeInterval);
-                            return;
-                        }
-                        if (Math.random() > 0.7) {
-                            const tempGlitch = glitchCovers[Math.floor(Math.random() * glitchCovers.length)];
-                            coverImage.src = tempGlitch;
-                            setTimeout(() => {
-                                if (isGlitchCoverActive) coverImage.src = glitchCover;
-                            }, 80);
-                        }
-                    }, 400);
-                    
-                    const duration = (Math.random() * 3000) + 1000; // 1-4 секунды
-                    currentGlitchTimeout = setTimeout(() => {
-                        coverImage.src = originalCover;
-                        coverWrapper.classList.remove('glitching-cover');
-                        isGlitchCoverActive = false;
-                        clearInterval(shakeInterval);
-                        currentGlitchTimeout = null;
-                    }, duration);
-                }
+                // интенсивная тряска и быстрая смена картинок
+                let swapCount = 0;
+                currentGlitchInterval = setInterval(() => {
+                    if (!isGlitchCoverActive) {
+                        clearInterval(currentGlitchInterval);
+                        return;
+                    }
+                    // каждые 100-200 мс меняем на другую глитч-обложку для усиления эффекта
+                    if (Math.random() > 0.4) {
+                        const tempIndex = Math.floor(Math.random() * glitchCovers.length);
+                        coverImage.src = glitchCovers[tempIndex];
+                        setTimeout(() => {
+                            if (isGlitchCoverActive) coverImage.src = glitchCover;
+                        }, 60);
+                    }
+                    swapCount++;
+                }, 150);
+                
+                // длительность от 1.5 до 4 секунд
+                const duration = (Math.random() * 2500) + 1500;
+                currentGlitchTimeout = setTimeout(() => {
+                    coverImage.src = originalCover;
+                    coverWrapper.classList.remove('glitching-cover');
+                    isGlitchCoverActive = false;
+                    if (currentGlitchInterval) clearInterval(currentGlitchInterval);
+                    currentGlitchTimeout = null;
+                }, duration);
             }
             
             function startGlitchCoverRotation() {
+                // первый раз через 3 секунды
+                setTimeout(() => {
+                    if (!isGlitchCoverActive) showRandomGlitchCover();
+                }, 3000);
+                
+                // каждые 5-9 секунд появляется глитч-обложка
                 setInterval(() => {
-                    if (!isGlitchCoverActive && Math.random() > 0.7) {
+                    if (!isGlitchCoverActive && Math.random() > 0.4) {
                         showRandomGlitchCover();
                     }
-                }, 11000); // примерно каждые 11 секунд может появиться глитч-обложка
-                setTimeout(() => showRandomGlitchCover(), 5000);
+                }, 5500);
             }
             
             // обработка ошибок загрузки глитч-обложек
             coverImage.onerror = function() {
                 if (coverImage.src.includes('glitchcover')) {
-                    // если глитч-обложка не загрузилась, возвращаем оригинал
                     coverImage.src = originalCover;
                     coverWrapper.classList.remove('glitching-cover');
                     isGlitchCoverActive = false;
                     if (currentGlitchTimeout) clearTimeout(currentGlitchTimeout);
-                } else {
-                    coverImage.style.filter = 'blur(3px) grayscale(0.7)';
-                    coverImage.style.opacity = '0.7';
+                    if (currentGlitchInterval) clearInterval(currentGlitchInterval);
                 }
             };
             
@@ -545,9 +545,9 @@
             
             function startBloodOverlayMessages() {
                 setInterval(() => {
-                    if (Math.random() > 0.65) showRandomBloodMessage();
-                }, 8000);
-                setTimeout(() => showRandomBloodMessage(), 3000);
+                    if (Math.random() > 0.6) showRandomBloodMessage();
+                }, 6000);
+                setTimeout(() => showRandomBloodMessage(), 2000);
             }
             
             // ------------------- ДИСКЛЕЙМЕР -------------------
@@ -670,8 +670,8 @@
                     for (let i = 0; i < count; i++) {
                         setTimeout(() => spawnGlitchMessage(), i * 200);
                     }
-                }, 7000);
-                setTimeout(() => { spawnGlitchMessage(); setTimeout(() => spawnGlitchMessage(), 400); }, 2000);
+                }, 6000);
+                setTimeout(() => { spawnGlitchMessage(); setTimeout(() => spawnGlitchMessage(), 400); }, 1500);
             }
             
             // ------------------- ПОДМЕНА ТРЕКОВ -------------------
@@ -735,10 +735,10 @@
             
             function startTrackReplacement() {
                 setInterval(() => {
-                    if (currentReplacedTrack === null && Math.random() > 0.65) {
+                    if (currentReplacedTrack === null && Math.random() > 0.6) {
                         replaceRandomTrack();
                     }
-                }, 11000);
+                }, 9000);
             }
             
             // ------------------- ГЛИТЧ-ЭФФЕКТЫ -------------------
@@ -760,9 +760,9 @@
             }
             
             function startTitleGlitch() {
-                setInterval(() => { if (Math.random() > 0.68) applyRandomTitleGlitch(); }, 4200);
+                setInterval(() => { if (Math.random() > 0.6) applyRandomTitleGlitch(); }, 3800);
                 setInterval(() => {
-                    if (Math.random() > 0.85 && titleElement) {
+                    if (Math.random() > 0.8 && titleElement) {
                         titleElement.textContent = "3 ZAK0ИA 0 VENHИ0STI";
                         titleElement.classList.add('glitch-active');
                         setTimeout(() => {
@@ -772,18 +772,18 @@
                             }
                         }, 280);
                     }
-                }, 9700);
+                }, 8500);
             }
             
             function startGlitchEffects() {
                 startTitleGlitch();
                 const tracklistDiv = document.querySelector('.tracklist');
                 setInterval(() => {
-                    if (Math.random() > 0.88 && tracklistDiv) {
+                    if (Math.random() > 0.85 && tracklistDiv) {
                         tracklistDiv.style.transform = `translateX(${Math.random() * 3 - 1.5}px)`;
                         setTimeout(() => { if (tracklistDiv) tracklistDiv.style.transform = ''; }, 70);
                     }
-                }, 3800);
+                }, 3500);
             }
             
             // анимация появления треков
