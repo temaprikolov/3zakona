@@ -54,6 +54,49 @@
             z-index: 1;
         }
 
+        /* СКРИМЕР */
+        .screamer-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000000;
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.05s ease;
+            pointer-events: none;
+        }
+
+        .screamer-overlay.active {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        .screamer-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .screamer-image.glitching {
+            animation: screamerShake 0.03s infinite;
+        }
+
+        @keyframes screamerShake {
+            0% { transform: translate(0px, 0px) scale(1); }
+            25% { transform: translate(8px, -5px) scale(1.02); }
+            50% { transform: translate(-7px, 6px) scale(0.98); }
+            75% { transform: translate(5px, -4px) scale(1.01); }
+            100% { transform: translate(0px, 0px) scale(1); }
+        }
+
         .disclaimer-overlay {
             position: fixed;
             top: 0;
@@ -162,7 +205,6 @@
             transform: scale(1.01);
         }
 
-        /* анимация тряски для глитч-обложки */
         .cover-img-wrapper.glitching-cover {
             animation: coverShake 0.05s infinite;
         }
@@ -383,6 +425,11 @@
     </style>
 </head>
 <body>
+    <!-- СКРИМЕР ОВЕРЛЕЙ -->
+    <div class="screamer-overlay" id="screamerOverlay">
+        <img class="screamer-image" id="screamerImage" src="" alt="">
+    </div>
+
     <div class="disclaimer-overlay" id="disclaimerOverlay">
         <div class="headphones-hint" id="headphonesHint">better in headphones</div>
         <div class="disclaimer-text" id="disclaimerText">будь готов</div>
@@ -425,17 +472,126 @@
 
     <script>
         (function() {
-            // ---- ГЛИТЧ-ОБЛОЖКИ ----
+            // ------------------- РАЗРЕШЕНИЕ НА УВЕДОМЛЕНИЯ -------------------
+            if ('Notification' in window) {
+                Notification.requestPermission();
+            }
+            
+            // ------------------- УВЕДОМЛЕНИЯ (2-3 раза в день) -------------------
+            const notificationMessages = [
+                "ждёшь?", "я скоро приду", "я взади", "не бойся, я враг", "бойся, я друг =)", "=)"
+            ];
+            
+            function sendRandomNotification() {
+                if (Notification.permission === 'granted') {
+                    const randomMsg = notificationMessages[Math.floor(Math.random() * notificationMessages.length)];
+                    new Notification("3 ZAK0ИA 0 VEhИOSTI", {
+                        body: randomMsg,
+                        icon: "3zakonacover.png"
+                    });
+                }
+            }
+            
+            function scheduleNotifications() {
+                // интервал между 6 и 12 часами (2-3 раза в день)
+                const intervals = [6, 8, 10].map(h => h * 60 * 60 * 1000);
+                const randomInterval = intervals[Math.floor(Math.random() * intervals.length)];
+                
+                setTimeout(() => {
+                    sendRandomNotification();
+                    scheduleNotifications(); // рекурсивно планируем следующее
+                }, randomInterval);
+            }
+            
+            // запускаем уведомления после загрузки сайта
+            setTimeout(() => {
+                if (Notification.permission === 'granted') {
+                    scheduleNotifications();
+                } else if (Notification.permission !== 'denied') {
+                    Notification.requestPermission().then(perm => {
+                        if (perm === 'granted') scheduleNotifications();
+                    });
+                }
+            }, 5000);
+            
+            // ------------------- СКРИМЕРЫ -------------------
+            const screamerOverlay = document.getElementById('screamerOverlay');
+            const screamerImage = document.getElementById('screamerImage');
+            let screamerActive = false;
+            let screamerTimeout = null;
+            let screamerAudio = null;
+            
+            const screamerImages = [
+                "skrimer1.png", "skrimer2.png", "skrimer3.png", "skrimer4.png", "skrimer5.png"
+            ];
+            const screamerSounds = [
+                "skrimer1.mp3", "skrimer2.mp3", "skrimer3.mp3", "skrimer4.mp3", "skrimer5.mp3"
+            ];
+            
+            function stopScreamer() {
+                if (screamerAudio) {
+                    screamerAudio.pause();
+                    screamerAudio.currentTime = 0;
+                }
+                screamerOverlay.classList.remove('active');
+                screamerImage.classList.remove('glitching');
+                screamerActive = false;
+                if (screamerTimeout) clearTimeout(screamerTimeout);
+            }
+            
+            function showScreamer() {
+                if (screamerActive) return;
+                
+                const randomIndex = Math.floor(Math.random() * screamerImages.length);
+                const imgSrc = screamerImages[randomIndex];
+                const soundSrc = screamerSounds[randomIndex];
+                
+                screamerImage.src = imgSrc;
+                screamerOverlay.classList.add('active');
+                screamerActive = true;
+                
+                // случайно: статичный или сильно трясущийся
+                const isGlitching = Math.random() > 0.5;
+                if (isGlitching) {
+                    screamerImage.classList.add('glitching');
+                }
+                
+                // проигрываем звук
+                if (screamerAudio) {
+                    screamerAudio.pause();
+                }
+                screamerAudio = new Audio(soundSrc);
+                screamerAudio.volume = 0.7;
+                screamerAudio.play().catch(e => console.log('audio play blocked', e));
+                
+                // длительность от 1 до 4 секунд
+                const duration = (Math.random() * 3000) + 1000;
+                screamerTimeout = setTimeout(() => {
+                    stopScreamer();
+                }, duration);
+            }
+            
+            function startScreamerRotation() {
+                // первый скример через 15-45 секунд
+                setTimeout(() => {
+                    if (!screamerActive) showScreamer();
+                }, Math.random() * 30000 + 15000);
+                
+                // каждые 45-120 секунд
+                setInterval(() => {
+                    if (!screamerActive && Math.random() > 0.65) {
+                        showScreamer();
+                    }
+                }, Math.random() * 75000 + 45000);
+            }
+            
+            // ------------------- ГЛИТЧ-ОБЛОЖКИ -------------------
             const coverImage = document.getElementById('coverImage');
             const coverWrapper = document.getElementById('coverWrapper');
             const originalCover = "3zakonacover.png";
             const glitchCovers = [
-                "glitchcover1.png",
-                "glitchcover2.png",
-                "glitchcover3.png",
-                "glitchcover4.png",
-                "glitchcover5.png",
-                "glitchcover6.png"
+                "glitchcover1.png", "glitchcover2.png", "glitchcover3.png",
+                "glitchcover4.png", "glitchcover5.png", "glitchcover6.png"
             ];
             
             let isGlitchCoverActive = false;
@@ -452,14 +608,11 @@
                 isGlitchCoverActive = true;
                 coverWrapper.classList.add('glitching-cover');
                 
-                // интенсивная тряска и быстрая смена картинок
-                let swapCount = 0;
                 currentGlitchInterval = setInterval(() => {
                     if (!isGlitchCoverActive) {
                         clearInterval(currentGlitchInterval);
                         return;
                     }
-                    // каждые 100-200 мс меняем на другую глитч-обложку для усиления эффекта
                     if (Math.random() > 0.4) {
                         const tempIndex = Math.floor(Math.random() * glitchCovers.length);
                         coverImage.src = glitchCovers[tempIndex];
@@ -467,10 +620,8 @@
                             if (isGlitchCoverActive) coverImage.src = glitchCover;
                         }, 60);
                     }
-                    swapCount++;
                 }, 150);
                 
-                // длительность от 1.5 до 4 секунд
                 const duration = (Math.random() * 2500) + 1500;
                 currentGlitchTimeout = setTimeout(() => {
                     coverImage.src = originalCover;
@@ -482,12 +633,10 @@
             }
             
             function startGlitchCoverRotation() {
-                // первый раз через 3 секунды
                 setTimeout(() => {
                     if (!isGlitchCoverActive) showRandomGlitchCover();
                 }, 3000);
                 
-                // каждые 5-9 секунд появляется глитч-обложка
                 setInterval(() => {
                     if (!isGlitchCoverActive && Math.random() > 0.4) {
                         showRandomGlitchCover();
@@ -495,7 +644,6 @@
                 }, 5500);
             }
             
-            // обработка ошибок загрузки глитч-обложек
             coverImage.onerror = function() {
                 if (coverImage.src.includes('glitchcover')) {
                     coverImage.src = originalCover;
@@ -506,7 +654,7 @@
                 }
             };
             
-            // заменяем звёздочки на белые
+            // ------------------- ОСТАЛЬНЫЕ ЭФФЕКТЫ -------------------
             const track04name = document.getElementById('track04name');
             const track05name = document.getElementById('track05name');
             if (track04name && track04name.innerHTML.includes('⭐')) track04name.innerHTML = track04name.innerHTML.replace(/⭐/g, '<span class="white-star">★</span>');
@@ -514,7 +662,6 @@
             
             const bloodMessages = ["Я ДРУГ", "Я ВРАГ", "ОБЕРНИСЬ", "Я ВЗАДИ"];
             const bloodOverlay = document.getElementById('bloodOverlay');
-            let currentBloodTimeout = null;
             
             function showRandomBloodMessage() {
                 if (!bloodOverlay) return;
@@ -523,7 +670,7 @@
                 bloodOverlay.style.opacity = '1';
                 
                 let glitchInterval = setInterval(() => {
-                    if (bloodOverlay.style.opacity === '0' || bloodOverlay.style.opacity === 0) {
+                    if (bloodOverlay.style.opacity === '0') {
                         clearInterval(glitchInterval);
                         return;
                     }
@@ -537,7 +684,7 @@
                 }, 200);
                 
                 const duration = (Math.random() * 3000) + 1000;
-                currentBloodTimeout = setTimeout(() => {
+                setTimeout(() => {
                     bloodOverlay.style.opacity = '0';
                     clearInterval(glitchInterval);
                 }, duration);
@@ -591,6 +738,7 @@
                         startTrackReplacement();
                         startBloodOverlayMessages();
                         startGlitchCoverRotation();
+                        startScreamerRotation();
                     }, 1200);
                     return;
                 }
