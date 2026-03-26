@@ -24,7 +24,6 @@
             overflow-x: hidden;
         }
 
-        /* зернистость */
         body::before {
             content: "";
             position: fixed;
@@ -43,7 +42,6 @@
             z-index: 2;
         }
 
-        /* кровавый отсвет */
         body::after {
             content: "";
             position: fixed;
@@ -56,7 +54,6 @@
             z-index: 1;
         }
 
-        /* дисклеймер оверлей */
         .disclaimer-overlay {
             position: fixed;
             top: 0;
@@ -129,7 +126,6 @@
             z-index: 10;
         }
 
-        /* обложка с кровавыми надписями */
         .cover {
             margin-bottom: 2rem;
             position: relative;
@@ -219,7 +215,7 @@
             text-align: left;
             display: inline-block;
             width: 100%;
-            max-width: 520px;
+            max-width: 560px;
             border-top: 1px solid #252525;
             border-bottom: 1px solid #252525;
             padding: 1.2rem 0;
@@ -265,7 +261,6 @@
             font-size: 0.65rem;
         }
 
-        /* белые звёздочки вместо жёлтых */
         .white-star {
             color: #cccccc;
             filter: grayscale(1);
@@ -366,6 +361,8 @@
             .blood-overlay-text { font-size: 0.8rem; white-space: nowrap; padding: 4px 8px; }
             .album-title { font-size: 0.9rem; letter-spacing: 2px; }
             .track { font-size: 0.7rem; gap: 0.5rem; }
+            .track-name { font-size: 0.7rem; }
+            .track-prod { font-size: 0.55rem; }
             .btn { font-size: 0.7rem; padding: 0.5rem 1rem; }
             .headphones-hint { font-size: 0.5rem; top: 8px; left: 8px; }
             .disclaimer-text { font-size: 1rem; }
@@ -391,14 +388,15 @@
                 <div class="track" data-original="верни мне ЧNСТИЛNЩЕ"><span class="track-num">01</span><span class="track-name">верни мне ЧNСТИЛNЩЕ</span><span class="track-prod">prod. me</span></div>
                 <div class="track" data-original="НАМАСТЕ"><span class="track-num">02</span><span class="track-name">НАМАСТЕ</span><span class="track-prod">prod. diklor</span></div>
                 <div class="track" data-original="ВНИКУДА"><span class="track-num">03</span><span class="track-name">ВНИКУДА</span><span class="track-prod">prod. diklor</span></div>
-                <div class="track" data-original="ДОРБЛЮ ⭐⭐⭐"><span class="track-num">04</span><span class="track-name" id="track04name">ДОРБЛЮ ⭐⭐⭐</span><span class="track-prod">prod. greyrock, pitch on</span></div>
-                <div class="track" data-original="ДОРБЛЮ ⭐⭐⭐"><span class="track-num">05</span><span class="track-name" id="track05name">ДОРБЛЮ ⭐⭐⭐</span><span class="track-prod">prod. greyrock, pitch off</span></div>
+                <div class="track" data-original="ДОРБЛЮ ★★★"><span class="track-num">04</span><span class="track-name" id="track04name">ДОРБЛЮ ★★★</span><span class="track-prod">prod. greyrock, pitch on</span></div>
+                <div class="track" data-original="ДОРБЛЮ ★★★"><span class="track-num">05</span><span class="track-name" id="track05name">ДОРБЛЮ ★★★</span><span class="track-prod">prod. greyrock, pitch off</span></div>
                 <div class="track" data-original="перерыв на рекламу, не переключайтесь"><span class="track-num">06</span><span class="track-name">перерыв на рекламу, не переключайтесь</span><span class="track-prod">prod. yana konram</span></div>
                 <div class="track" data-original="третьяковская галерея (feat. hellwyy)"><span class="track-num">07</span><span class="track-name">третьяковская галерея (feat. hellwyy)</span><span class="track-prod">prod. Toby Fox</span></div>
                 <div class="track" data-original="ТЫ СЧАСТЛNВ - ОНN НЕТ"><span class="track-num">08</span><span class="track-name">ТЫ СЧАСТЛNВ - ОНN НЕТ</span><span class="track-prod">prod. me</span></div>
                 <div class="track" data-original="Я СЧ4СТЛNВ - ТЫ Н3Т"><span class="track-num">09</span><span class="track-name">Я СЧ4СТЛNВ - ТЫ Н3Т</span><span class="track-prod">prod. me</span></div>
                 <div class="track" data-original="ren &quot;demo&quot; &quot;release&quot;"><span class="track-num">10</span><span class="track-name">ren "demo" "release"</span><span class="track-prod">prod. me</span></div>
                 <div class="track" data-original="ТЕPP4КТЫ!!"><span class="track-num">11</span><span class="track-name">ТЕPP4КТЫ!!</span><span class="track-prod">prod. greyrock</span></div>
+                <div class="track" data-original="ГнNЁt (feat. Galina Leanovna)"><span class="track-num">12</span><span class="track-name">ГнNЁt (feat. Galina Leanovna)</span><span class="track-prod">prod. me</span></div>
             </div>
             <div class="links">
                 <a href="https://soundcloud.com/temaprikolov93" class="btn" target="_blank">SOUNDCLOUD</a>
@@ -414,13 +412,12 @@
 
     <script>
         (function() {
-            // заменяем жёлтые звёздочки на белые
+            // заменяем звёздочки на белые (уже ★ в коде, но оставим для совместимости)
             const track04name = document.getElementById('track04name');
             const track05name = document.getElementById('track05name');
-            if (track04name) track04name.innerHTML = track04name.innerHTML.replace(/⭐/g, '<span class="white-star">★</span>');
-            if (track05name) track05name.innerHTML = track05name.innerHTML.replace(/⭐/g, '<span class="white-star">★</span>');
+            if (track04name && track04name.innerHTML.includes('⭐')) track04name.innerHTML = track04name.innerHTML.replace(/⭐/g, '<span class="white-star">★</span>');
+            if (track05name && track05name.innerHTML.includes('⭐')) track05name.innerHTML = track05name.innerHTML.replace(/⭐/g, '<span class="white-star">★</span>');
             
-            // список для кровавых надписей на обложке
             const bloodMessages = ["Я ДРУГ", "Я ВРАГ", "ОБЕРНИСЬ", "Я ВЗАДИ"];
             const bloodOverlay = document.getElementById('bloodOverlay');
             let currentBloodTimeout = null;
@@ -431,9 +428,7 @@
                 bloodOverlay.textContent = randomMsg;
                 bloodOverlay.style.opacity = '1';
                 
-                // глитч-эффект во время показа
-                let glitchCount = 0;
-                const glitchInterval = setInterval(() => {
+                let glitchInterval = setInterval(() => {
                     if (bloodOverlay.style.opacity === '0' || bloodOverlay.style.opacity === 0) {
                         clearInterval(glitchInterval);
                         return;
@@ -447,7 +442,6 @@
                     }
                 }, 200);
                 
-                // длительность от 1 до 4 секунд
                 const duration = (Math.random() * 3000) + 1000;
                 currentBloodTimeout = setTimeout(() => {
                     bloodOverlay.style.opacity = '0';
@@ -457,9 +451,7 @@
             
             function startBloodOverlayMessages() {
                 setInterval(() => {
-                    if (Math.random() > 0.65) {
-                        showRandomBloodMessage();
-                    }
+                    if (Math.random() > 0.65) showRandomBloodMessage();
                 }, 8000);
                 setTimeout(() => showRandomBloodMessage(), 3000);
             }
