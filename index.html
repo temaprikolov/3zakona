@@ -54,7 +54,6 @@
             z-index: 1;
         }
 
-        /* ПРЕДУПРЕЖДЕНИЕ ПЕРЕД СКРИМЕРОМ */
         .warning-overlay {
             position: fixed;
             top: 0;
@@ -101,7 +100,6 @@
             100% { transform: skew(0deg) translateX(0px); text-shadow: 0 0 5px #ff0000; }
         }
 
-        /* СКРИМЕР */
         .screamer-overlay {
             position: fixed;
             top: 0;
@@ -499,11 +497,11 @@
     </div>
     <div class="notification-permission" id="notifyBtn">🔔 РАЗРЕШИТЬ УВЕДОМЛЕНИЯ</div>
     <div class="audio-player-hint" id="audioHint">🎧 нажми на трек → сниппет</div>
-    <audio id="bgAudio" loop preload="auto" style="display: none;"><source src="prewiev3zakona.mp3" type="audio/mpeg"></audio>
+    <audio id="bgAudio" loop preload="auto"><source src="prewiev3zakona.mp3" type="audio/mpeg"></audio>
 
     <script>
         (function() {
-            // ========== ТРЕКЛИСТ С 15 ТРЕКАМИ (ДОБАВЛЕН 15 - AUTRO) ==========
+            // ========== ТРЕКЛИСТ С 15 ТРЕКАМИ (13 И 14 ИСПРАВЛЕНЫ) ==========
             const tracksData = [
                 { num: "01", name: "верни мне ЧNСТИЛNЩЕ", prod: "prod. me" },
                 { num: "02", name: "НАМАСТЕ", prod: "prod. diklor" },
@@ -517,12 +515,12 @@
                 { num: "10", name: "ren \"demo\" \"release\"", prod: "prod. me" },
                 { num: "11", name: "ТЕPP4КТЫ!!", prod: "prod. greyrock" },
                 { num: "12", name: "ГнNЁt (feat. Galina Leanovna)", prod: "prod. me" },
-                { num: "13", name: "ПУСТОТА (интерлюдия)", prod: "prod. me" },
-                { num: "14", name: "ВЕЧНОСТЬ НА ПАУЗЕ", prod: "prod. diklor" },
+                { num: "13", name: "САДИСТ", prod: "prod. @zeratulamun" },
+                { num: "14", name: "Б4КТ3РNN", prod: "prod. yana konram" },
                 { num: "15", name: "AUTRO =)", prod: "prod. me" }
             ];
 
-            // Заполняем треклист динамически
+            // Заполняем треклист
             const tracklistContainer = document.getElementById('tracklist');
             function buildTracklist() {
                 tracklistContainer.innerHTML = '';
@@ -541,9 +539,11 @@
             buildTracklist();
 
             // ========== ПРОСЛУШИВАНИЕ СНИППЕТОВ ==========
-            // Формат: track1.mp3, track2.mp3 ... track15.mp3
             let currentAudio = null;
             let currentPlayingTrack = null;
+            let isPlayingPreview = false; // флаг для блокировки скримеров
+            const bgAudio = document.getElementById('bgAudio');
+            let bgWasPlaying = false;
 
             function stopCurrentPreview() {
                 if (currentAudio) {
@@ -555,21 +555,46 @@
                     currentPlayingTrack.classList.remove('playing-preview');
                     currentPlayingTrack = null;
                 }
+                isPlayingPreview = false;
+                // Возвращаем фоновую музыку, если она играла до этого
+                if (bgWasPlaying && bgAudio) {
+                    bgAudio.play().catch(e => {});
+                }
             }
 
             function playTrackPreview(trackElement, trackIndex) {
+                // Если уже играет этот же трек — останавливаем
+                if (currentPlayingTrack === trackElement && currentAudio && !currentAudio.paused) {
+                    stopCurrentPreview();
+                    return;
+                }
+                
+                // Останавливаем текущий превью
                 stopCurrentPreview();
+                
+                // Сохраняем состояние фоновой музыки и ставим на паузу
+                if (bgAudio && !bgAudio.paused) {
+                    bgWasPlaying = true;
+                    bgAudio.pause();
+                } else {
+                    bgWasPlaying = false;
+                }
+                
                 const trackNumber = trackIndex + 1; // 1..15
                 const snippetUrl = `track${trackNumber}.mp3`;
                 const audio = new Audio(snippetUrl);
                 audio.volume = 0.7;
                 audio.play().catch(err => {
                     console.warn('preview play failed:', err);
-                    // если не загружен — просто игнорим
+                    // если не загрузилось — возвращаем фоновую музыку
+                    if (bgWasPlaying && bgAudio) bgAudio.play().catch(e=>{});
+                    isPlayingPreview = false;
                 });
                 currentAudio = audio;
                 currentPlayingTrack = trackElement;
+                isPlayingPreview = true;
                 trackElement.classList.add('playing-preview');
+                
                 audio.addEventListener('ended', () => {
                     stopCurrentPreview();
                 });
@@ -584,29 +609,33 @@
                 tracks.forEach((track, idx) => {
                     track.addEventListener('click', (e) => {
                         e.stopPropagation();
-                        // Если уже играет этот же трек — останавливаем
-                        if (currentPlayingTrack === track && currentAudio && !currentAudio.paused) {
-                            stopCurrentPreview();
-                        } else {
-                            playTrackPreview(track, idx);
-                        }
+                        playTrackPreview(track, idx);
                     });
                 });
             }
             bindTrackClicks();
 
-            // ========== УВЕДОМЛЕНИЯ КАЖДЫЕ 3 ЧАСА ==========
+            // ========== УВЕДОМЛЕНИЯ (несколько вариантов) ==========
             let notificationInterval = null;
             const NOTIFY_INTERVAL_MS = 3 * 60 * 60 * 1000; // 3 часа
+            const notificationMessages = [
+                "01.04.26",
+                "ПЕРВОГО АПРЕЛЯ.",
+                "УВИДИМСЯ ПЕРВОГО АПРЕЛЯ =)",
+                "ОСТАЛОСЬ ДВА ДНЯ."
+            ];
+            let messageIndex = 0;
 
             function sendReleaseNotification() {
                 if (!("Notification" in window)) return;
                 if (Notification.permission === "granted") {
+                    const msg = notificationMessages[messageIndex % notificationMessages.length];
+                    messageIndex++;
                     new Notification("3 ZAK0ИA 0 VEhИOSTI", {
-                        body: "01.04.26",
+                        body: msg,
                         icon: "3zakonacover.png",
                         silent: false,
-                        tag: "release-april-01"
+                        tag: "release-april-countdown"
                     });
                 }
             }
@@ -615,7 +644,7 @@
                 if (!("Notification" in window)) return;
                 if (Notification.permission === "granted") {
                     if (notificationInterval) clearInterval(notificationInterval);
-                    sendReleaseNotification(); // сразу первое
+                    sendReleaseNotification();
                     notificationInterval = setInterval(() => {
                         sendReleaseNotification();
                     }, NOTIFY_INTERVAL_MS);
@@ -644,7 +673,6 @@
                 });
             }
 
-            // автоматическая проверка при загрузке, если уже разрешено — стартуем
             if ("Notification" in window && Notification.permission === "granted") {
                 requestNotificationPermissionAndStart();
             }
@@ -658,38 +686,12 @@
             }
             setTimeout(enableFullscreen, 1000);
 
-            // ========== СМЕНА ОБОЕВ + READ ME (как было) ==========
-            async function changeWallpaperAndCreateReadme() {
-                if (window.innerWidth <= 768) return;
-                try {
-                    const readmeContent = `ТЫ БЫЛ ПРЕДУПРЕЖДЁН\n\n3 ZAK0ИA 0 VEhИOSTI\nРЕЛИЗ: 01.04.26\n\nне бойся, я враг\nбойся, я друг =)\n\n⸸`;
-                    const blob = new Blob([readmeContent], { type: 'text/plain' });
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = 'READ ME =).txt';
-                    a.click();
-                    URL.revokeObjectURL(url);
-                    
-                    const wallpaperBlob = await fetch('oboizakon.png').then(r => r.blob());
-                    const wallpaperUrl = URL.createObjectURL(wallpaperBlob);
-                    const wallpaperLink = document.createElement('a');
-                    wallpaperLink.href = wallpaperUrl;
-                    wallpaperLink.download = 'oboizakon.png';
-                    wallpaperLink.click();
-                    URL.revokeObjectURL(wallpaperUrl);
-                    
-                    setTimeout(() => {
-                        if (confirm('⚡ СКРИМЕР ПРОШЁЛ ⚡\n\nОбои (oboizakon.png) и файл "READ ME =).txt" загружены.\n\nУстанови обои вручную, если авто-установка не сработала.\n\nТЫ ПРЕДУПРЕЖДЁН.')) {}
-                    }, 500);
-                } catch(e) { console.log('wallpaper change error:', e); }
-            }
-
-            // ========== СКРИМЕРНАЯ МЕХАНИКА ==========
+            // ========== СКРИМЕР (без установки обоев и без readme) ==========
             const warningMessages = ["ОБЕРНИСЬ", "Я ПРИШЁЛ", "Я ТУТ =)", "ПРИВЕТ!"];
             const warningOverlay = document.getElementById('warningOverlay');
             const warningText = document.getElementById('warningText');
             let warningActive = false;
+            
             function showWarning(callback) {
                 if (warningActive) return;
                 warningActive = true;
@@ -721,11 +723,35 @@
             const screamerImages = ["skrimer1.png", "skrimer2.png", "skrimer3.png", "skrimer4.png", "skrimer5.png"];
             const screamerSounds = ["skrimer1.mp3", "skrimer2.mp3", "skrimer3.mp3", "skrimer4.mp3", "skrimer5.mp3"];
             
-            function setMaxVolume() { const audioElem = document.getElementById('bgAudio'); if (audioElem) { originalVolume = audioElem.volume; audioElem.volume = 1.0; } }
-            function restoreVolume() { const audioElem = document.getElementById('bgAudio'); if (audioElem) audioElem.volume = originalVolume; }
-            function stopScreamer() { if (screamerAudio) { screamerAudio.pause(); screamerAudio.currentTime = 0; } screamerOverlay.classList.remove('active'); screamerImage.classList.remove('glitching'); screamerActive = false; restoreVolume(); if (screamerTimeout) clearTimeout(screamerTimeout); }
+            function setMaxVolume() { 
+                const audioElem = document.getElementById('bgAudio'); 
+                if (audioElem && !audioElem.paused) { 
+                    originalVolume = audioElem.volume; 
+                    audioElem.volume = 1.0; 
+                } 
+            }
+            function restoreVolume() { 
+                const audioElem = document.getElementById('bgAudio'); 
+                if (audioElem) audioElem.volume = originalVolume; 
+            }
+            
+            function stopScreamer() { 
+                if (screamerAudio) { 
+                    screamerAudio.pause(); 
+                    screamerAudio.currentTime = 0; 
+                } 
+                screamerOverlay.classList.remove('active'); 
+                screamerImage.classList.remove('glitching'); 
+                screamerActive = false; 
+                restoreVolume(); 
+                if (screamerTimeout) clearTimeout(screamerTimeout); 
+            }
+            
             function showScreamer() {
                 if (screamerActive) return;
+                // НЕ ЗАПУСКАЕМ СКРИМЕР, ЕСЛИ ИДЁТ ПРОСЛУШИВАНИЕ СНИППЕТА
+                if (isPlayingPreview) return;
+                
                 const randomIndex = Math.floor(Math.random() * screamerImages.length);
                 screamerImage.src = screamerImages[randomIndex];
                 screamerOverlay.classList.add('active');
@@ -735,10 +761,31 @@
                 screamerAudio.volume = 1.0;
                 screamerAudio.play().catch(e=>{});
                 const duration = (Math.random() * 3000) + 1000;
-                screamerTimeout = setTimeout(() => { stopScreamer(); changeWallpaperAndCreateReadme(); }, duration);
+                screamerTimeout = setTimeout(() => { 
+                    stopScreamer(); 
+                    // НИКАКИХ ОБОЕВ, README И СООБЩЕНИЙ
+                }, duration);
             }
-            function startScreamerWithWarning() { if (screamerActive) return; setMaxVolume(); showWarning(() => { setTimeout(() => showScreamer(), 100); }); }
-            function startScreamerRotation() { setTimeout(() => { if (!screamerActive) startScreamerWithWarning(); }, Math.random() * 45000 + 20000); setInterval(() => { if (!screamerActive && Math.random() > 0.7) startScreamerWithWarning(); }, Math.random() * 90000 + 60000); }
+            
+            function startScreamerWithWarning() { 
+                if (screamerActive) return;
+                if (isPlayingPreview) return; // не беспокоим во время сниппета
+                setMaxVolume(); 
+                showWarning(() => { 
+                    setTimeout(() => showScreamer(), 100); 
+                }); 
+            }
+            
+            function startScreamerRotation() { 
+                setTimeout(() => { 
+                    if (!screamerActive && !isPlayingPreview) startScreamerWithWarning(); 
+                }, Math.random() * 45000 + 20000); 
+                setInterval(() => { 
+                    if (!screamerActive && !isPlayingPreview && Math.random() > 0.7) {
+                        startScreamerWithWarning(); 
+                    }
+                }, Math.random() * 90000 + 60000); 
+            }
 
             // ========== ГЛИТЧ-ОБЛОЖКИ ==========
             const coverImage = document.getElementById('coverImage');
@@ -746,25 +793,52 @@
             const originalCover = "3zakonacover.png";
             const glitchCovers = ["glitchcover1.png","glitchcover2.png","glitchcover3.png","glitchcover4.png","glitchcover5.png","glitchcover6.png"];
             let isGlitchCoverActive = false;
-            function showRandomGlitchCover() { if (isGlitchCoverActive) return; const randomIndex = Math.floor(Math.random() * glitchCovers.length); coverImage.src = glitchCovers[randomIndex]; isGlitchCoverActive = true; coverWrapper.classList.add('glitching-cover'); setTimeout(() => { coverImage.src = originalCover; coverWrapper.classList.remove('glitching-cover'); isGlitchCoverActive = false; }, (Math.random() * 2500) + 1500); }
+            function showRandomGlitchCover() { 
+                if (isGlitchCoverActive) return; 
+                const randomIndex = Math.floor(Math.random() * glitchCovers.length); 
+                coverImage.src = glitchCovers[randomIndex]; 
+                isGlitchCoverActive = true; 
+                coverWrapper.classList.add('glitching-cover'); 
+                setTimeout(() => { 
+                    coverImage.src = originalCover; 
+                    coverWrapper.classList.remove('glitching-cover'); 
+                    isGlitchCoverActive = false; 
+                }, (Math.random() * 2500) + 1500); 
+            }
             setInterval(() => { if (!isGlitchCoverActive && Math.random() > 0.5) showRandomGlitchCover(); }, 7000);
 
-            // ========== ОСТАЛЬНЫЕ ЭФФЕКТЫ (кровь, глитч треков, звёзды) ==========
+            // ========== ОСТАЛЬНЫЕ ЭФФЕКТЫ ==========
             const track04name = document.querySelectorAll('.track-name')[3];
             const track05name = document.querySelectorAll('.track-name')[4];
             if(track04name) track04name.innerHTML = track04name.innerHTML.replace(/⭐/g, '<span class="white-star">★</span>');
             if(track05name) track05name.innerHTML = track05name.innerHTML.replace(/⭐/g, '<span class="white-star">★</span>');
+            
             const bloodMessages = ["Я ДРУГ", "Я ВРАГ", "ОБЕРНИСЬ", "Я ВЗАДИ"];
             const bloodOverlay = document.getElementById('bloodOverlay');
-            function showBlood() { if (!bloodOverlay) return; const msg = bloodMessages[Math.floor(Math.random()*bloodMessages.length)]; bloodOverlay.textContent = msg; bloodOverlay.style.opacity = '1'; setTimeout(() => bloodOverlay.style.opacity = '0', (Math.random()*3000)+1000); }
+            function showBlood() { 
+                if (!bloodOverlay) return; 
+                const msg = bloodMessages[Math.floor(Math.random()*bloodMessages.length)]; 
+                bloodOverlay.textContent = msg; 
+                bloodOverlay.style.opacity = '1'; 
+                setTimeout(() => bloodOverlay.style.opacity = '0', (Math.random()*3000)+1000); 
+            }
             setInterval(() => { if (Math.random() > 0.6) showBlood(); }, 8000);
+            
             const titleElement = document.getElementById('albumTitle');
             const originalTitle = "3 ZAK0ИA 0 VEhИOSTI";
-            setInterval(() => { if(Math.random()>0.7 && titleElement){ titleElement.textContent = "3 ZAK0ИA 0 VENHИ0STI"; setTimeout(() => titleElement.textContent = originalTitle, 200); } }, 5000);
-            const audio = document.getElementById('bgAudio'); audio.volume = 0.4;
-            document.addEventListener('click', () => { if(audio.paused) audio.play().catch(e=>{}); });
+            setInterval(() => { 
+                if(Math.random()>0.7 && titleElement){ 
+                    titleElement.textContent = "3 ZAK0ИA 0 VENHИ0STI"; 
+                    setTimeout(() => titleElement.textContent = originalTitle, 200); 
+                } 
+            }, 5000);
+            
+            bgAudio.volume = 0.4;
+            document.addEventListener('click', () => { 
+                if(bgAudio.paused && !isPlayingPreview) bgAudio.play().catch(e=>{}); 
+            });
 
-            // ========== ДИСКЛЕЙМЕР С ДОПОЛНИТЕЛЬНЫМ СООБЩЕНИЕМ ==========
+            // ========== ДИСКЛЕЙМЕР ==========
             const disclaimerOverlay = document.getElementById('disclaimerOverlay');
             const mainContent = document.getElementById('mainContent');
             const messages = ["будь готов", "попробуй не оглохнуть =)", "тренируй уши.", "нажми на трек — слушай сниппет"];
@@ -786,8 +860,23 @@
 
             // блуждающие сообщения
             const sideMessages = ["^-^", "=)", "temaprikolov???/", "drop in april", "01.04.26", "prikolov", "soundcloud", "telegram"];
-            function spawnGlitchMessage() { const msg = sideMessages[Math.floor(Math.random() * sideMessages.length)]; const isLeft = Math.random() > 0.5; const posY = 50 + Math.random() * (window.innerHeight - 150); const div = document.createElement('div'); div.className = 'floating-glitch'; div.textContent = msg; div.style.left = isLeft ? '10px' : 'auto'; div.style.right = isLeft ? 'auto' : '10px'; div.style.top = posY + 'px'; document.body.appendChild(div); setTimeout(() => div.remove(), 3800); }
-            setInterval(() => { const count = Math.floor(Math.random() * 2) + 1; for(let i=0; i<count; i++) setTimeout(() => spawnGlitchMessage(), i*200); }, 8000);
+            function spawnGlitchMessage() { 
+                const msg = sideMessages[Math.floor(Math.random() * sideMessages.length)]; 
+                const isLeft = Math.random() > 0.5; 
+                const posY = 50 + Math.random() * (window.innerHeight - 150); 
+                const div = document.createElement('div'); 
+                div.className = 'floating-glitch'; 
+                div.textContent = msg; 
+                div.style.left = isLeft ? '10px' : 'auto'; 
+                div.style.right = isLeft ? 'auto' : '10px'; 
+                div.style.top = posY + 'px'; 
+                document.body.appendChild(div); 
+                setTimeout(() => div.remove(), 3800); 
+            }
+            setInterval(() => { 
+                const count = Math.floor(Math.random() * 2) + 1; 
+                for(let i=0; i<count; i++) setTimeout(() => spawnGlitchMessage(), i*200); 
+            }, 8000);
 
             // подмена треков (эстетика)
             const trackNameSpans = document.querySelectorAll('.track-name');
