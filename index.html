@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>3 ZAK0ИA 0 VEhИOSTI | РЕЛИЗ 01.04.26</title>
+    <title>3 ZAK0ИA 0 VEhИOSTI</title>
     <style>
         * {
             margin: 0;
@@ -13,15 +13,14 @@
 
         body {
             background: #000000;
-            font-family: 'Courier New', 'Lucida Console', 'VT323', monospace;
+            font-family: 'Courier New', 'Lucida Console', monospace;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             position: relative;
-            color: #4a4a4a;
+            color: #8a6a6a;
             padding: 2rem 1rem;
-            overflow-x: hidden;
         }
 
         body::before {
@@ -33,875 +32,302 @@
             height: 100%;
             background: repeating-linear-gradient(
                 0deg,
-                rgba(20, 20, 20, 0.4) 0px,
-                rgba(20, 20, 20, 0.4) 2px,
+                rgba(30, 30, 30, 0.4) 0px,
+                rgba(30, 30, 30, 0.4) 2px,
                 transparent 2px,
                 transparent 6px
             );
             pointer-events: none;
-            z-index: 2;
-        }
-
-        body::after {
-            content: "";
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 140px;
-            background: linear-gradient(to top, rgba(40, 0, 0, 0.28) 0%, transparent 100%);
-            pointer-events: none;
             z-index: 1;
         }
 
-        .warning-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            z-index: 1999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.1s ease;
-            pointer-events: none;
-        }
-
-        .warning-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .warning-text {
-            font-family: 'Courier New', monospace;
-            font-size: clamp(2rem, 10vw, 4rem);
-            font-weight: bold;
-            color: #aa2a2a;
-            text-transform: uppercase;
-            text-align: center;
-            letter-spacing: 8px;
-            background: rgba(0, 0, 0, 0.8);
-            padding: 1rem 2rem;
-            border-left: 4px solid #aa2a2a;
-            border-right: 4px solid #aa2a2a;
-            text-shadow: 0 0 10px #ff0000, 0 0 5px #3a0000;
-            animation: warningGlitch 0.08s infinite;
-            white-space: nowrap;
-        }
-
-        @keyframes warningGlitch {
-            0% { transform: skew(0deg) translateX(0px); text-shadow: -2px 0 #ff0000; }
-            25% { transform: skew(2deg) translateX(3px); text-shadow: 2px 0 #ff4444; }
-            75% { transform: skew(-2deg) translateX(-3px); text-shadow: -1px 0 #aa0000; }
-            100% { transform: skew(0deg) translateX(0px); text-shadow: 0 0 5px #ff0000; }
-        }
-
-        .screamer-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #000000;
-            z-index: 2000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.05s ease;
-            pointer-events: none;
-        }
-
-        .screamer-overlay.active {
-            opacity: 1;
-            visibility: visible;
-            pointer-events: auto;
-        }
-
-        .screamer-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
-        .screamer-image.glitching {
-            animation: screamerShake 0.03s infinite;
-        }
-
-        @keyframes screamerShake {
-            0% { transform: translate(0px, 0px) scale(1); }
-            25% { transform: translate(8px, -5px) scale(1.02); }
-            50% { transform: translate(-7px, 6px) scale(0.98); }
-            75% { transform: translate(5px, -4px) scale(1.01); }
-            100% { transform: translate(0px, 0px) scale(1); }
-        }
-
-        .disclaimer-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #000000;
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            transition: opacity 1.2s ease;
-            opacity: 1;
-            pointer-events: none;
-        }
-
-        .disclaimer-text {
-            font-family: 'Courier New', monospace;
-            font-size: clamp(1rem, 6vw, 1.6rem);
-            letter-spacing: 4px;
-            color: #6a2a2a;
-            text-align: center;
-            text-transform: uppercase;
-            background: #000000;
-            padding: 1.5rem;
-            animation: glitchFlicker 0.2s infinite;
-            text-shadow: 0 0 5px #3a0a0a;
-        }
-
-        .headphones-hint {
-            position: fixed;
-            top: 15px;
-            left: 15px;
-            font-family: 'Courier New', monospace;
-            font-size: 0.65rem;
-            color: #4a2a2a;
-            background: rgba(0, 0, 0, 0.6);
-            padding: 4px 8px;
-            letter-spacing: 1px;
-            z-index: 1001;
-            border-left: 2px solid #6a2a2a;
-            opacity: 0.7;
-            animation: hintGlitch 0.25s infinite;
-            white-space: nowrap;
-        }
-
-        @keyframes hintGlitch {
-            0% { opacity: 0.6; transform: translateX(0px); }
-            25% { opacity: 0.9; transform: translateX(1px); text-shadow: -1px 0 #8a2a2a; }
-            75% { opacity: 0.5; transform: translateX(-1px); text-shadow: 1px 0 #3a0a0a; }
-            100% { opacity: 0.7; transform: translateX(0px); }
-        }
-
-        @keyframes glitchFlicker {
-            0% { opacity: 1; text-shadow: -1px 0 #8a2a2a; transform: skew(0deg);}
-            25% { opacity: 0.92; text-shadow: 1px 0 #4a0a0a; transform: skew(0.5deg);}
-            50% { opacity: 1; text-shadow: -1px 0 #6a2a2a; transform: skew(-0.3deg);}
-            75% { opacity: 0.96; text-shadow: 2px 0 #2a0a0a; transform: skew(0.2deg);}
-            100% { opacity: 1; text-shadow: 0 0 #6a2a2a; transform: skew(0deg);}
-        }
-
         .main-content {
-            opacity: 0;
-            transition: opacity 2s ease;
             width: 100%;
-            max-width: 700px;
+            max-width: 480px;
             margin: 0 auto;
             position: relative;
             z-index: 10;
             text-align: center;
         }
 
-        @media (max-width: 768px) {
-            body { padding: 1rem; }
-            .main-content { max-width: 100%; }
-            .warning-text { letter-spacing: 4px; font-size: clamp(1.2rem, 8vw, 2rem); padding: 0.8rem 1.2rem; }
-        }
-
         .cover {
             margin-bottom: 2rem;
-            position: relative;
-            opacity: 0;
-            animation: coverReveal 1.1s ease-out 0.3s forwards;
-            display: inline-block;
         }
-        @keyframes coverReveal {
-            0% { opacity: 0; transform: scale(0.92); filter: grayscale(1); }
-            100% { opacity: 1; transform: scale(1); filter: grayscale(0.2); }
-        }
-        .cover-img-wrapper {
-            position: relative;
-            display: inline-block;
-            width: 200px;
-            height: 200px;
-        }
+
         .cover img {
-            width: 200px;
-            height: 200px;
+            width: 280px;
+            height: 280px;
             object-fit: cover;
-            border: 1px solid #2a2a2a;
-            box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
-            transition: all 0.1s ease;
-            filter: grayscale(0.3) contrast(1.05);
-            display: block;
+            border: 1px solid #3a2a2a;
+            filter: grayscale(0.3);
+            transition: 0.2s;
         }
+
+        @media (max-width: 550px) {
+            .cover img {
+                width: 220px;
+                height: 220px;
+            }
+        }
+
         .cover img:hover {
-            filter: grayscale(0) contrast(1.1);
-            border-color: #5a2a2a;
-            transform: scale(1.01);
+            filter: grayscale(0);
+            border-color: #6a3a3a;
         }
-        .cover-img-wrapper.glitching-cover {
-            animation: coverShake 0.05s infinite;
+
+        .album-title {
+            font-size: 1.2rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #7a5a5a;
+            margin-bottom: 2rem;
         }
-        @keyframes coverShake {
-            0% { transform: translate(0px, 0px) rotate(0deg); }
-            25% { transform: translate(3px, -2px) rotate(0.8deg); }
-            50% { transform: translate(-3px, 2px) rotate(-0.8deg); }
-            75% { transform: translate(2px, -1px) rotate(0.5deg); }
-            100% { transform: translate(0px, 0px) rotate(0deg); }
+
+        .listen-block {
+            margin: 2rem 0;
         }
-        .blood-overlay-text {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+
+        .listen-btn {
+            display: inline-block;
             font-family: 'Courier New', monospace;
             font-size: 1.2rem;
             font-weight: bold;
-            color: #aa2a2a;
             text-transform: uppercase;
-            text-align: center;
-            letter-spacing: 3px;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 6px 12px;
-            border-left: 2px solid #aa2a2a;
-            border-right: 2px solid #aa2a2a;
-            white-space: nowrap;
-            z-index: 15;
-            pointer-events: none;
-            text-shadow: 0 0 5px #ff0000;
-            backdrop-filter: blur(2px);
-            animation: bloodTextGlitch 0.12s infinite;
-            opacity: 0;
-        }
-        @keyframes bloodTextGlitch {
-            0% { text-shadow: -1px 0 #ff0000; transform: translate(-50%, -50%) skew(0deg);}
-            25% { text-shadow: -2px 0 #aa0000; transform: translate(-50%, -50%) skew(1deg);}
-            75% { text-shadow: 1px 0 #ff4444; transform: translate(-50%, -50%) skew(-0.8deg);}
-            100% { text-shadow: 0 0 3px #ff0000; transform: translate(-50%, -50%) skew(0deg);}
-        }
-        .album-title {
-            font-size: 1.2rem;
             letter-spacing: 4px;
-            text-transform: uppercase;
-            color: #6a6a6a;
-            margin-bottom: 2rem;
-            font-weight: normal;
-            animation: titleGlow 3s infinite alternate;
-        }
-        @keyframes titleGlow {
-            0% { text-shadow: 0 0 0px #3a3a3a; color: #6a6a6a; }
-            100% { text-shadow: 0 0 2px #7a2a2a; color: #8a5a5a; }
-        }
-        .tracklist {
-            margin: 2rem auto;
-            text-align: left;
-            display: block;
+            color: #bc8f8f;
+            background: transparent;
+            border: 1px solid #5a3a3a;
+            padding: 0.9rem 2rem;
+            text-decoration: none;
+            transition: all 0.2s ease;
             width: 100%;
-            max-width: 560px;
-            border-top: 1px solid #252525;
-            border-bottom: 1px solid #252525;
-            padding: 1.2rem 0;
+            max-width: 320px;
         }
-        .track {
-            display: flex;
-            align-items: baseline;
-            gap: 0.8rem;
-            padding: 0.45rem 0.2rem;
-            font-size: 0.8rem;
-            font-family: 'Courier New', monospace;
-            transition: all 0.25s ease;
-            border-left: 2px solid transparent;
-            cursor: pointer;
+
+        .listen-btn:hover {
+            color: #dcaeae;
+            border-color: #aa5a5a;
+            letter-spacing: 5px;
+            background: rgba(70, 30, 30, 0.3);
         }
-        .track:hover {
-            border-left-color: #aa2a2a;
-            padding-left: 8px;
-            background: rgba(30, 30, 30, 0.5);
-        }
-        .track-num {
-            color: #5a3a3a;
-            min-width: 32px;
-            font-size: 0.75rem;
-        }
-        .track-name {
-            flex: 1;
-            color: #8a8a8a;
-            text-transform: uppercase;
-            transition: color 0.1s;
-        }
-        .track-prod {
-            color: #4a4a4a;
-            font-size: 0.65rem;
-        }
-        .white-star {
-            color: #cccccc;
-            filter: grayscale(1);
-            display: inline-block;
-        }
-        .track.glitching-track {
-            animation: trackShake 0.08s infinite;
-            background: rgba(60, 10, 10, 0.3);
-        }
-        @keyframes trackShake {
-            0% { transform: translateX(0px); }
-            25% { transform: translateX(2px); }
-            75% { transform: translateX(-2px); }
-            100% { transform: translateX(0px); }
-        }
-        .glitched-track-name {
-            color: #bc4a4a !important;
-            text-shadow: 0 0 3px #6a0000;
-        }
+
         .links {
             margin-top: 2rem;
             display: flex;
-            gap: 1.8rem;
+            gap: 1.5rem;
             justify-content: center;
             flex-wrap: wrap;
         }
+
         .btn {
             font-family: 'Courier New', monospace;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             text-transform: uppercase;
             letter-spacing: 2px;
-            color: #6a6a6a;
+            color: #6a4a4a;
             background: transparent;
-            border: 1px solid #3a3a3a;
-            padding: 0.6rem 1.4rem;
+            border: 1px solid #3a2a2a;
+            padding: 0.5rem 1.2rem;
             text-decoration: none;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
         }
+
         .btn:hover {
-            color: #bc8f8f;
-            border-color: #7a2a2a;
-            background: rgba(30, 10, 10, 0.4);
-            letter-spacing: 3px;
-            transform: translateY(-2px);
+            color: #aa7a7a;
+            border-color: #7a3a3a;
         }
+
         .footer {
             margin-top: 2.5rem;
-            font-size: 0.65rem;
-            color: #3a3a3a;
-            letter-spacing: 1.5px;
-            border-top: 1px solid #202020;
-            padding-top: 1.5rem;
+            font-size: 0.6rem;
+            color: #3a2a2a;
+            letter-spacing: 1px;
+            border-top: 1px solid #2a2020;
+            padding-top: 1.2rem;
         }
-        .floating-glitch {
+
+        .blood-overlay {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: monospace;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #aa2a2a;
+            text-shadow: 0 0 10px #ff0000;
+            background: rgba(0,0,0,0.7);
+            padding: 1rem 2rem;
+            border-left: 2px solid #aa2a2a;
+            border-right: 2px solid #aa2a2a;
+            white-space: nowrap;
+            z-index: 100;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.05s;
+        }
+
+        .floating-text {
             position: fixed;
             z-index: 20;
-            font-family: 'Courier New', monospace;
-            font-size: 0.85rem;
-            color: #6a2a2a;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 4px 12px;
-            border-left: 2px solid #8a2a2a;
-            white-space: nowrap;
-            pointer-events: none;
-            backdrop-filter: blur(2px);
-            opacity: 0;
-            animation: floatGlitch 3.5s ease forwards;
-        }
-        @keyframes floatGlitch {
-            0% { opacity: 0; transform: translateX(-10px); filter: blur(2px); }
-            15% { opacity: 0.9; transform: translateX(0); filter: blur(0); }
-            85% { opacity: 0.8; }
-            100% { opacity: 0; transform: translateX(8px) translateY(-12px); filter: blur(3px); }
-        }
-        .notification-permission {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: #1a1a1a;
-            border-left: 3px solid #aa2a2a;
-            padding: 12px 18px;
-            font-family: 'Courier New', monospace;
-            font-size: 0.7rem;
-            color: #bc8f8f;
-            z-index: 1002;
-            backdrop-filter: blur(8px);
-            cursor: pointer;
-            transition: 0.2s;
-            border-radius: 2px;
-            opacity: 0.9;
-        }
-        .notification-permission:hover {
-            opacity: 1;
-            background: #2a1a1a;
-            border-left-color: #ff4a4a;
-        }
-        .audio-player-hint {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            background: rgba(0,0,0,0.6);
-            padding: 6px 12px;
-            font-size: 0.6rem;
-            color: #6a5a5a;
             font-family: monospace;
-            border-radius: 2px;
+            font-size: 0.7rem;
+            color: #8a4a4a;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 3px 10px;
+            border-left: 1px solid #aa5a5a;
             pointer-events: none;
-            z-index: 1001;
+            opacity: 0;
+            animation: floatFade 3s ease forwards;
         }
-        @media (max-width: 560px) {
-            .cover-img-wrapper, .cover img { width: 150px; height: 150px; }
-            .blood-overlay-text { font-size: 0.8rem; }
-            .album-title { font-size: 0.9rem; }
-            .track { font-size: 0.7rem; }
-            .btn { font-size: 0.7rem; }
-            .notification-permission { bottom: 10px; right: 10px; padding: 6px 12px; }
+
+        @keyframes floatFade {
+            0% { opacity: 0; transform: translateX(-5px); }
+            15% { opacity: 0.8; transform: translateX(0); }
+            85% { opacity: 0.6; }
+            100% { opacity: 0; transform: translateX(10px); }
         }
-        .track.playing-preview {
-            background: rgba(100, 30, 30, 0.5);
-            border-left-color: #ff4a4a;
+
+        .glitch-cover {
+            animation: coverGlitch 0.05s infinite;
+        }
+
+        @keyframes coverGlitch {
+            0% { transform: translate(0,0); }
+            25% { transform: translate(2px,-1px); }
+            75% { transform: translate(-2px,1px); }
+            100% { transform: translate(0,0); }
         }
     </style>
 </head>
 <body>
-    <div class="warning-overlay" id="warningOverlay">
-        <div class="warning-text" id="warningText">ОБЕРНИСЬ</div>
-    </div>
-    <div class="screamer-overlay" id="screamerOverlay">
-        <img class="screamer-image" id="screamerImage" src="" alt="">
-    </div>
-    <div class="disclaimer-overlay" id="disclaimerOverlay">
-        <div class="headphones-hint" id="headphonesHint">better in headphones</div>
-        <div class="disclaimer-text" id="disclaimerText">будь готов</div>
-    </div>
-    <div class="main-content" id="mainContent">
-        <div class="container">
-            <div class="cover">
-                <div class="cover-img-wrapper" id="coverWrapper">
-                    <img src="3zakonacover.png" alt="3 ZAK0ИA 0 VEhИOSTI" id="coverImage">
-                    <div class="blood-overlay-text" id="bloodOverlay"></div>
-                </div>
-            </div>
-            <div class="album-title" id="albumTitle">3 ZAK0ИA 0 VEhИOSTI</div>
-            <div class="tracklist" id="tracklist"></div>
-            <div class="links"><a href="https://soundcloud.com/temaprikolov93" class="btn" target="_blank">SOUNDCLOUD</a><a href="https://t.me/temaprikolov2" class="btn" target="_blank">TELEGRAM</a></div>
-            <div class="footer">РЕЛИЗ 01.04.26 | 3 ZAK0ИA 0 VEhИOSTI</div>
+    <div class="main-content">
+        <div class="cover">
+            <img src="3zakonacover.png" alt="3 ZAK0ИA 0 VEhИOSTI" id="coverImage">
+        </div>
+        <div class="album-title" id="albumTitle">3 ZAK0ИA 0 VEhИOSTI</div>
+        
+        <div class="listen-block">
+            <a href="https://soundcloud.com/temaprikolov93/sets/3zakonaovechnosti" class="listen-btn" target="_blank" id="listenBtn">
+                СЛУШАТЬ АЛЬБОМ
+            </a>
+        </div>
+
+        <div class="links">
+            <a href="https://soundcloud.com/temaprikolov93" class="btn" target="_blank">SOUNDCLOUD</a>
+            <a href="https://t.me/temaprikolov2" class="btn" target="_blank">TELEGRAM</a>
+        </div>
+        <div class="footer">
+            3 ZAK0ИA 0 VEhИOSTI
         </div>
     </div>
-    <div class="notification-permission" id="notifyBtn">🔔 РАЗРЕШИТЬ УВЕДОМЛЕНИЯ</div>
-    <div class="audio-player-hint" id="audioHint">🎧 нажми на трек → сниппет</div>
-    <audio id="bgAudio" loop preload="auto"><source src="prewiev3zakona.mp3" type="audio/mpeg"></audio>
 
     <script>
         (function() {
-            // ========== ТРЕКЛИСТ С 15 ТРЕКАМИ (13 И 14 ИСПРАВЛЕНЫ) ==========
-            const tracksData = [
-                { num: "01", name: "верни мне ЧNСТИЛNЩЕ", prod: "prod. me" },
-                { num: "02", name: "НАМАСТЕ", prod: "prod. diklor" },
-                { num: "03", name: "ВНИКУДА", prod: "prod. diklor" },
-                { num: "04", name: "ДОРБЛЮ ★★★", prod: "prod. greyrock, pitch on" },
-                { num: "05", name: "ДОРБЛЮ ★★★", prod: "prod. greyrock, pitch off" },
-                { num: "06", name: "перерыв на рекламу, не переключайтесь", prod: "prod. yana konram" },
-                { num: "07", name: "третьяковская галерея (feat. hellwyy)", prod: "prod. Toby Fox" },
-                { num: "08", name: "ТЫ СЧАСТЛNВ - ОНN НЕТ", prod: "prod. me" },
-                { num: "09", name: "Я СЧ4СТЛNВ - ТЫ Н3Т", prod: "prod. me" },
-                { num: "10", name: "ren \"demo\" \"release\"", prod: "prod. me" },
-                { num: "11", name: "ТЕPP4КТЫ!!", prod: "prod. greyrock" },
-                { num: "12", name: "ГнNЁt (feat. Galina Leanovna)", prod: "prod. me" },
-                { num: "13", name: "САДИСТ", prod: "prod. @zeratulamun" },
-                { num: "14", name: "Б4КТ3РNN", prod: "prod. yana konram" },
-                { num: "15", name: "AUTRO =)", prod: "prod. me" }
-            ];
-
-            // Заполняем треклист
-            const tracklistContainer = document.getElementById('tracklist');
-            function buildTracklist() {
-                tracklistContainer.innerHTML = '';
-                tracksData.forEach((track, idx) => {
-                    const trackDiv = document.createElement('div');
-                    trackDiv.className = 'track';
-                    trackDiv.setAttribute('data-track-idx', idx);
-                    trackDiv.innerHTML = `
-                        <span class="track-num">${track.num}</span>
-                        <span class="track-name">${track.name}</span>
-                        <span class="track-prod">${track.prod}</span>
-                    `;
-                    tracklistContainer.appendChild(trackDiv);
-                });
-            }
-            buildTracklist();
-
-            // ========== ПРОСЛУШИВАНИЕ СНИППЕТОВ ==========
-            let currentAudio = null;
-            let currentPlayingTrack = null;
-            let isPlayingPreview = false; // флаг для блокировки скримеров
-            const bgAudio = document.getElementById('bgAudio');
-            let bgWasPlaying = false;
-
-            function stopCurrentPreview() {
-                if (currentAudio) {
-                    currentAudio.pause();
-                    currentAudio.currentTime = 0;
-                    currentAudio = null;
-                }
-                if (currentPlayingTrack) {
-                    currentPlayingTrack.classList.remove('playing-preview');
-                    currentPlayingTrack = null;
-                }
-                isPlayingPreview = false;
-                // Возвращаем фоновую музыку, если она играла до этого
-                if (bgWasPlaying && bgAudio) {
-                    bgAudio.play().catch(e => {});
-                }
-            }
-
-            function playTrackPreview(trackElement, trackIndex) {
-                // Если уже играет этот же трек — останавливаем
-                if (currentPlayingTrack === trackElement && currentAudio && !currentAudio.paused) {
-                    stopCurrentPreview();
-                    return;
-                }
-                
-                // Останавливаем текущий превью
-                stopCurrentPreview();
-                
-                // Сохраняем состояние фоновой музыки и ставим на паузу
-                if (bgAudio && !bgAudio.paused) {
-                    bgWasPlaying = true;
-                    bgAudio.pause();
-                } else {
-                    bgWasPlaying = false;
-                }
-                
-                const trackNumber = trackIndex + 1; // 1..15
-                const snippetUrl = `track${trackNumber}.mp3`;
-                const audio = new Audio(snippetUrl);
-                audio.volume = 0.7;
-                audio.play().catch(err => {
-                    console.warn('preview play failed:', err);
-                    // если не загрузилось — возвращаем фоновую музыку
-                    if (bgWasPlaying && bgAudio) bgAudio.play().catch(e=>{});
-                    isPlayingPreview = false;
-                });
-                currentAudio = audio;
-                currentPlayingTrack = trackElement;
-                isPlayingPreview = true;
-                trackElement.classList.add('playing-preview');
-                
-                audio.addEventListener('ended', () => {
-                    stopCurrentPreview();
-                });
-                audio.addEventListener('error', () => {
-                    stopCurrentPreview();
-                });
-            }
-
-            // привязка кликов на треки
-            function bindTrackClicks() {
-                const tracks = document.querySelectorAll('.track');
-                tracks.forEach((track, idx) => {
-                    track.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        playTrackPreview(track, idx);
-                    });
-                });
-            }
-            bindTrackClicks();
-
-            // ========== УВЕДОМЛЕНИЯ (несколько вариантов) ==========
-            let notificationInterval = null;
-            const NOTIFY_INTERVAL_MS = 3 * 60 * 60 * 1000; // 3 часа
-            const notificationMessages = [
-                "01.04.26",
-                "ПЕРВОГО АПРЕЛЯ.",
-                "УВИДИМСЯ ПЕРВОГО АПРЕЛЯ =)",
-                "ОСТАЛОСЬ ДВА ДНЯ."
-            ];
-            let messageIndex = 0;
-
-            function sendReleaseNotification() {
-                if (!("Notification" in window)) return;
-                if (Notification.permission === "granted") {
-                    const msg = notificationMessages[messageIndex % notificationMessages.length];
-                    messageIndex++;
-                    new Notification("3 ZAK0ИA 0 VEhИOSTI", {
-                        body: msg,
-                        icon: "3zakonacover.png",
-                        silent: false,
-                        tag: "release-april-countdown"
-                    });
-                }
-            }
-
-            function requestNotificationPermissionAndStart() {
-                if (!("Notification" in window)) return;
-                if (Notification.permission === "granted") {
-                    if (notificationInterval) clearInterval(notificationInterval);
-                    sendReleaseNotification();
-                    notificationInterval = setInterval(() => {
-                        sendReleaseNotification();
-                    }, NOTIFY_INTERVAL_MS);
-                } else if (Notification.permission !== "denied") {
-                    Notification.requestPermission().then(perm => {
-                        if (perm === "granted") {
-                            if (notificationInterval) clearInterval(notificationInterval);
-                            sendReleaseNotification();
-                            notificationInterval = setInterval(() => {
-                                sendReleaseNotification();
-                            }, NOTIFY_INTERVAL_MS);
-                        }
-                    });
-                }
-            }
-
-            const notifyBtn = document.getElementById('notifyBtn');
-            if (notifyBtn) {
-                notifyBtn.addEventListener('click', () => {
-                    requestNotificationPermissionAndStart();
-                    notifyBtn.style.opacity = '0.5';
-                    notifyBtn.textContent = '✅ УВЕДОМЛЕНИЯ ВКЛЮЧЕНЫ';
-                    setTimeout(() => {
-                        if (notifyBtn) notifyBtn.style.opacity = '0.9';
-                    }, 2000);
-                });
-            }
-
-            if ("Notification" in window && Notification.permission === "granted") {
-                requestNotificationPermissionAndStart();
-            }
-
-            // ========== FULLSCREEN ==========
+            // фулскрин по клику
+            let fullscreenEnabled = false;
             function enableFullscreen() {
+                if (fullscreenEnabled) return;
                 const elem = document.documentElement;
-                if (elem.requestFullscreen) elem.requestFullscreen().catch(e=>{});
+                if (elem.requestFullscreen) elem.requestFullscreen().catch(() => {});
                 else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
-                else if (elem.msRequestFullscreen) elem.msRequestFullscreen();
+                fullscreenEnabled = true;
             }
-            setTimeout(enableFullscreen, 1000);
+            document.addEventListener('click', () => enableFullscreen(), { once: true });
+            document.addEventListener('touchstart', () => enableFullscreen(), { once: true });
 
-            // ========== СКРИМЕР (без установки обоев и без readme) ==========
-            const warningMessages = ["ОБЕРНИСЬ", "Я ПРИШЁЛ", "Я ТУТ =)", "ПРИВЕТ!"];
-            const warningOverlay = document.getElementById('warningOverlay');
-            const warningText = document.getElementById('warningText');
-            let warningActive = false;
-            
-            function showWarning(callback) {
-                if (warningActive) return;
-                warningActive = true;
-                const randomMsg = warningMessages[Math.floor(Math.random() * warningMessages.length)];
-                warningText.textContent = randomMsg;
-                warningOverlay.classList.add('active');
-                let glitchInterval = setInterval(() => {
-                    if (!warningActive) { clearInterval(glitchInterval); return; }
-                    if (Math.random() > 0.5) {
-                        const glitched = randomMsg.split('').map(c => Math.random() > 0.85 ? String.fromCharCode(c.charCodeAt(0) + (Math.random() > 0.5 ? 1 : -1)) : c).join('');
-                        warningText.textContent = glitched;
-                        setTimeout(() => { if (warningActive) warningText.textContent = randomMsg; }, 80);
-                    }
-                }, 120);
-                setTimeout(() => {
-                    warningOverlay.classList.remove('active');
-                    warningActive = false;
-                    clearInterval(glitchInterval);
-                    if (callback) callback();
-                }, 2800);
-            }
-
-            const screamerOverlay = document.getElementById('screamerOverlay');
-            const screamerImage = document.getElementById('screamerImage');
-            let screamerActive = false;
-            let screamerTimeout = null;
-            let screamerAudio = null;
-            let originalVolume = 0.4;
-            const screamerImages = ["skrimer1.png", "skrimer2.png", "skrimer3.png", "skrimer4.png", "skrimer5.png"];
-            const screamerSounds = ["skrimer1.mp3", "skrimer2.mp3", "skrimer3.mp3", "skrimer4.mp3", "skrimer5.mp3"];
-            
-            function setMaxVolume() { 
-                const audioElem = document.getElementById('bgAudio'); 
-                if (audioElem && !audioElem.paused) { 
-                    originalVolume = audioElem.volume; 
-                    audioElem.volume = 1.0; 
-                } 
-            }
-            function restoreVolume() { 
-                const audioElem = document.getElementById('bgAudio'); 
-                if (audioElem) audioElem.volume = originalVolume; 
-            }
-            
-            function stopScreamer() { 
-                if (screamerAudio) { 
-                    screamerAudio.pause(); 
-                    screamerAudio.currentTime = 0; 
-                } 
-                screamerOverlay.classList.remove('active'); 
-                screamerImage.classList.remove('glitching'); 
-                screamerActive = false; 
-                restoreVolume(); 
-                if (screamerTimeout) clearTimeout(screamerTimeout); 
-            }
-            
-            function showScreamer() {
-                if (screamerActive) return;
-                // НЕ ЗАПУСКАЕМ СКРИМЕР, ЕСЛИ ИДЁТ ПРОСЛУШИВАНИЕ СНИППЕТА
-                if (isPlayingPreview) return;
-                
-                const randomIndex = Math.floor(Math.random() * screamerImages.length);
-                screamerImage.src = screamerImages[randomIndex];
-                screamerOverlay.classList.add('active');
-                screamerActive = true;
-                if (Math.random() > 0.5) screamerImage.classList.add('glitching');
-                screamerAudio = new Audio(screamerSounds[randomIndex]);
-                screamerAudio.volume = 1.0;
-                screamerAudio.play().catch(e=>{});
-                const duration = (Math.random() * 3000) + 1000;
-                screamerTimeout = setTimeout(() => { 
-                    stopScreamer(); 
-                    // НИКАКИХ ОБОЕВ, README И СООБЩЕНИЙ
-                }, duration);
-            }
-            
-            function startScreamerWithWarning() { 
-                if (screamerActive) return;
-                if (isPlayingPreview) return; // не беспокоим во время сниппета
-                setMaxVolume(); 
-                showWarning(() => { 
-                    setTimeout(() => showScreamer(), 100); 
-                }); 
-            }
-            
-            function startScreamerRotation() { 
-                setTimeout(() => { 
-                    if (!screamerActive && !isPlayingPreview) startScreamerWithWarning(); 
-                }, Math.random() * 45000 + 20000); 
-                setInterval(() => { 
-                    if (!screamerActive && !isPlayingPreview && Math.random() > 0.7) {
-                        startScreamerWithWarning(); 
-                    }
-                }, Math.random() * 90000 + 60000); 
-            }
-
-            // ========== ГЛИТЧ-ОБЛОЖКИ ==========
-            const coverImage = document.getElementById('coverImage');
-            const coverWrapper = document.getElementById('coverWrapper');
+            const cover = document.getElementById('coverImage');
             const originalCover = "3zakonacover.png";
-            const glitchCovers = ["glitchcover1.png","glitchcover2.png","glitchcover3.png","glitchcover4.png","glitchcover5.png","glitchcover6.png"];
-            let isGlitchCoverActive = false;
-            function showRandomGlitchCover() { 
-                if (isGlitchCoverActive) return; 
-                const randomIndex = Math.floor(Math.random() * glitchCovers.length); 
-                coverImage.src = glitchCovers[randomIndex]; 
-                isGlitchCoverActive = true; 
-                coverWrapper.classList.add('glitching-cover'); 
-                setTimeout(() => { 
-                    coverImage.src = originalCover; 
-                    coverWrapper.classList.remove('glitching-cover'); 
-                    isGlitchCoverActive = false; 
-                }, (Math.random() * 2500) + 1500); 
-            }
-            setInterval(() => { if (!isGlitchCoverActive && Math.random() > 0.5) showRandomGlitchCover(); }, 7000);
+            const glitchImages = ["glitchcover1.png","glitchcover2.png","glitchcover3.png","glitchcover4.png","glitchcover5.png","glitchcover6.png"];
+            let glitching = false;
 
-            // ========== ОСТАЛЬНЫЕ ЭФФЕКТЫ ==========
-            const track04name = document.querySelectorAll('.track-name')[3];
-            const track05name = document.querySelectorAll('.track-name')[4];
-            if(track04name) track04name.innerHTML = track04name.innerHTML.replace(/⭐/g, '<span class="white-star">★</span>');
-            if(track05name) track05name.innerHTML = track05name.innerHTML.replace(/⭐/g, '<span class="white-star">★</span>');
-            
-            const bloodMessages = ["Я ДРУГ", "Я ВРАГ", "ОБЕРНИСЬ", "Я ВЗАДИ"];
-            const bloodOverlay = document.getElementById('bloodOverlay');
-            function showBlood() { 
-                if (!bloodOverlay) return; 
-                const msg = bloodMessages[Math.floor(Math.random()*bloodMessages.length)]; 
-                bloodOverlay.textContent = msg; 
-                bloodOverlay.style.opacity = '1'; 
-                setTimeout(() => bloodOverlay.style.opacity = '0', (Math.random()*3000)+1000); 
-            }
-            setInterval(() => { if (Math.random() > 0.6) showBlood(); }, 8000);
-            
-            const titleElement = document.getElementById('albumTitle');
-            const originalTitle = "3 ZAK0ИA 0 VEhИOSTI";
-            setInterval(() => { 
-                if(Math.random()>0.7 && titleElement){ 
-                    titleElement.textContent = "3 ZAK0ИA 0 VENHИ0STI"; 
-                    setTimeout(() => titleElement.textContent = originalTitle, 200); 
-                } 
-            }, 5000);
-            
-            bgAudio.volume = 0.4;
-            document.addEventListener('click', () => { 
-                if(bgAudio.paused && !isPlayingPreview) bgAudio.play().catch(e=>{}); 
-            });
-
-            // ========== ДИСКЛЕЙМЕР ==========
-            const disclaimerOverlay = document.getElementById('disclaimerOverlay');
-            const mainContent = document.getElementById('mainContent');
-            const messages = ["будь готов", "попробуй не оглохнуть =)", "тренируй уши.", "нажми на трек — слушай сниппет"];
-            let step = 0;
-            function runDisclaimer() {
-                if (step >= messages.length) {
-                    disclaimerOverlay.style.opacity = '0';
-                    setTimeout(() => {
-                        disclaimerOverlay.style.display = 'none';
-                        mainContent.style.opacity = '1';
-                        startScreamerRotation();
-                    }, 1200);
-                    return;
-                }
-                document.getElementById('disclaimerText').textContent = messages[step];
-                setTimeout(() => { step++; runDisclaimer(); }, 2800);
-            }
-            runDisclaimer();
-
-            // блуждающие сообщения
-            const sideMessages = ["^-^", "=)", "temaprikolov???/", "drop in april", "01.04.26", "prikolov", "soundcloud", "telegram"];
-            function spawnGlitchMessage() { 
-                const msg = sideMessages[Math.floor(Math.random() * sideMessages.length)]; 
-                const isLeft = Math.random() > 0.5; 
-                const posY = 50 + Math.random() * (window.innerHeight - 150); 
-                const div = document.createElement('div'); 
-                div.className = 'floating-glitch'; 
-                div.textContent = msg; 
-                div.style.left = isLeft ? '10px' : 'auto'; 
-                div.style.right = isLeft ? 'auto' : '10px'; 
-                div.style.top = posY + 'px'; 
-                document.body.appendChild(div); 
-                setTimeout(() => div.remove(), 3800); 
-            }
-            setInterval(() => { 
-                const count = Math.floor(Math.random() * 2) + 1; 
-                for(let i=0; i<count; i++) setTimeout(() => spawnGlitchMessage(), i*200); 
-            }, 8000);
-
-            // подмена треков (эстетика)
-            const trackNameSpans = document.querySelectorAll('.track-name');
-            const glitchTrackMessages = ["Зачем ты тут?", "Почему ты тут находишься?", "Я друг", "Я враг", "Я забрал чистилище.", "Расскажи мне все 3 закона", "Знаешь 3 закона о вечности?", "Переходи на мой саундклауд", "Переходи в мой телеграм канал"];
-            let currentReplaced = null;
-            setInterval(() => {
-                if(currentReplaced || !trackNameSpans.length) return;
-                const idx = Math.floor(Math.random() * trackNameSpans.length);
-                const span = trackNameSpans[idx];
-                const track = document.querySelectorAll('.track')[idx];
-                const original = span.textContent;
-                const msg = glitchTrackMessages[Math.floor(Math.random() * glitchTrackMessages.length)];
-                span.textContent = msg;
-                span.classList.add('glitched-track-name');
-                track.classList.add('glitching-track');
-                currentReplaced = { span, track, original };
+            function randomGlitch() {
+                if (glitching) return;
+                const randomImg = glitchImages[Math.floor(Math.random() * glitchImages.length)];
+                cover.src = randomImg;
+                cover.classList.add('glitch-cover');
+                glitching = true;
                 setTimeout(() => {
-                    if(currentReplaced) {
-                        currentReplaced.span.textContent = currentReplaced.original;
-                        currentReplaced.span.classList.remove('glitched-track-name');
-                        currentReplaced.track.classList.remove('glitching-track');
-                        currentReplaced = null;
-                    }
-                }, (Math.random() * 8000) + 2000);
+                    cover.src = originalCover;
+                    cover.classList.remove('glitch-cover');
+                    glitching = false;
+                }, 800 + Math.random() * 1200);
+            }
+
+            setInterval(() => {
+                if (!glitching && Math.random() > 0.7) randomGlitch();
+            }, 7000);
+
+            // редкие кровавые надписи
+            const bloodMessages = ["обернись", "я здесь", "3 закона", "вечность"];
+            let bloodDiv = null;
+            
+            function showBloodMessage() {
+                if (bloodDiv) return;
+                const msg = bloodMessages[Math.floor(Math.random() * bloodMessages.length)];
+                bloodDiv = document.createElement('div');
+                bloodDiv.className = 'blood-overlay';
+                bloodDiv.textContent = msg.toUpperCase();
+                document.body.appendChild(bloodDiv);
+                bloodDiv.style.opacity = '1';
+                setTimeout(() => {
+                    bloodDiv.style.opacity = '0';
+                    setTimeout(() => {
+                        if (bloodDiv) bloodDiv.remove();
+                        bloodDiv = null;
+                    }, 300);
+                }, 1200);
+            }
+
+            setInterval(() => {
+                if (!bloodDiv && Math.random() > 0.85) showBloodMessage();
             }, 12000);
+
+            // плавающие тексты
+            const floatMessages = ["soundcloud", "3 закона", "temaprikolov", "вечность", "слушай"];
+            function spawnFloat() {
+                const msg = floatMessages[Math.floor(Math.random() * floatMessages.length)];
+                const div = document.createElement('div');
+                div.className = 'floating-text';
+                div.textContent = msg;
+                div.style.left = (Math.random() * 80 + 10) + '%';
+                div.style.top = (Math.random() * 80 + 10) + '%';
+                document.body.appendChild(div);
+                setTimeout(() => div.remove(), 2800);
+            }
+            setInterval(() => {
+                if (Math.random() > 0.6) spawnFloat();
+            }, 9000);
+
+            // глитч заголовка
+            const title = document.getElementById('albumTitle');
+            const originalTitle = "3 ZAK0ИA 0 VEhИOSTI";
+            setInterval(() => {
+                if (Math.random() > 0.8 && title) {
+                    title.textContent = "3 ZAK0ИA 0 VENHИ0STI";
+                    setTimeout(() => title.textContent = originalTitle, 180);
+                }
+            }, 6000);
+
+            // клик по кнопке — вспышка
+            const btn = document.getElementById('listenBtn');
+            if (btn) {
+                btn.addEventListener('click', (e) => {
+                    const flash = document.createElement('div');
+                    flash.textContent = '▶';
+                    flash.style.position = 'fixed';
+                    flash.style.left = e.clientX + 'px';
+                    flash.style.top = e.clientY + 'px';
+                    flash.style.color = '#aa3a3a';
+                    flash.style.fontSize = '1.5rem';
+                    flash.style.fontWeight = 'bold';
+                    flash.style.textShadow = '0 0 5px red';
+                    flash.style.pointerEvents = 'none';
+                    flash.style.zIndex = '9999';
+                    document.body.appendChild(flash);
+                    setTimeout(() => flash.remove(), 300);
+                });
+            }
         })();
     </script>
 </body>
